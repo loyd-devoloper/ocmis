@@ -1,13 +1,13 @@
 <div>
-    <nav class="bg-[#244a62]">
+    <nav class="border-b shadow-sm bg-[#ffffff]">
         <div class="navbar  max-w-screen-xl mx-auto">
             <div class="navbar-start">
 
-                <a class="btn btn-ghost text-xl">OCMIS</a>
+                <a class="btn btn-ghost text-xl">OCMIS </a>
             </div>
             <div class="navbar-center ">
                 <ul class="menu menu-horizontal px-1">
-                    <li><a class="text-white font-bold">Home</a></li>
+                    <li ><a href="{{ route('home') }}"  class="{{ request()->routeIs('home') ? 'font-bold' : '' }}">Home</a></li>
                     <li><a>Niches</a></li>
                     <li><a>Services</a></li>
                     <li><a>Shop</a></li>
@@ -29,8 +29,8 @@
                             Cart
                             <div class="badge badge-md badge-primary">+99</div>
                         </a></li>
-                    <li><a href="{{ route('login') }}">Login</a></li>
-                    <li><a href="{{ route('register') }}">Register</a></li>
+                    <li><a href="{{ route('login') }}" class="{{ request()->routeIs('login') ? 'font-bold' : '' }}">Login</a></li>
+                    <li><a href="{{ route('register') }}" class="{{ request()->routeIs('register') ? 'font-bold' : '' }}">Register</a></li>
 
                 </ul>
             </div>

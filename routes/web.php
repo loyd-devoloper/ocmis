@@ -13,6 +13,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/',\App\Livewire\Customer\Home::class);
+Route::get('/',\App\Livewire\Customer\Home::class)->name('home');
 Route::get('/login',\App\Livewire\Auth\Login::class)->name('login');
 Route::get('/register',\App\Livewire\Auth\Register::class)->name('register');
+
+Route::prefix('admin')->group(function () {
+    Route::get('users',\App\Livewire\Admin\Users::class)->name('admin.users');
+});
