@@ -20,7 +20,13 @@ class Login extends Component
         ]);
         if(Auth::attempt($validate))
         {
-          $this->redirectRoute('admin.users');
+            if(Auth::user()->role == 'admin')
+            {
+                $this->redirectRoute('admin.users');
+            }else{
+                $this->redirectRoute('home');
+            }
+
         }else{
             Notification::make()
             ->title( 'Wrong Credential')

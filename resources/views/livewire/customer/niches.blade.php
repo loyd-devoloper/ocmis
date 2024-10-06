@@ -2,7 +2,7 @@
     <x-customer.header>
         <div class="w-full bg-darkGray min-h-[40svh] text-white flex justify-center items-center">
             <div>
-                <p class="text-center text-4xl font-bold">OCMIS: Online Columbarium Management and Information System</p>
+                <p class="text-center text-4xl font-bold">OCMIS Niches</p>
                 <p  class="text-center text-xl">Guiding You Through Moments of Remembrance</p>
             </div>
         </div>
@@ -10,23 +10,15 @@
 
         <div class="swiper m-4  " x-ref="container">
             <!-- Additional required wrapper -->
-            <div class="swiper-wrapper  min-h-[50svh]  max-h-[50svh]  ">
+            <div class="swiper-wrapper min-h-[50svh]  max-h-[50svh]  ">
                 <!-- Slides -->
-                <div class="swiper-slide relative !flex !justify-center !h-full ">
+                @foreach ($buildings as $building)
+                <a href="{{ route('niches.building',['id'=>$building->id]) }}" class="swiper-slide relative !flex !justify-center !h-full ">
                     <img class="min-h-[40svh] max-h-[40svh]"
-                    src="{{ asset('Asset/columbarium1.png') }}"
+                    src="{{ asset('storage/'.$building?->image) }}"
                     alt="carousel image"  />
-                </div>
-                <div class="swiper-slide relative !flex !justify-center !h-full ">
-                    <img class="min-h-[40svh] max-h-[40svh]"
-                    src="{{ asset('Asset/columbarium2.png') }}"
-                    alt="carousel image"  />
-                </div>
-                <div class="swiper-slide relative !flex !justify-center !h-full ">
-                    <img class="min-h-[40svh] max-h-[40svh]"
-                    src="{{ asset('Asset/columbarium3.png') }}"
-                    alt="carousel image"  />
-                </div>
+                </a>
+                @endforeach
 
 
 

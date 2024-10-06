@@ -14,7 +14,7 @@
         @vite('resources/css/app.css')
 
     </head>
-    <body class="bg-[#e2e2e2] min-h-[100svh]">
+    <body class="h-full bg-[#e2e2e2] ">
         {{ $slot }}
         @livewire('notifications')
         @filamentScripts
