@@ -37,6 +37,8 @@ Route::middleware('admin.only')->prefix('admin')->group(function () {
     Route::get('niches/urn',\App\Livewire\Admin\Niches\Urn::class)->name('admin.niches.urn');
 
     Route::get('Services/Category',\App\Livewire\Admin\Services\Category::class)->name('admin.services.category');
+    Route::get('Services/Priest',\App\Livewire\Admin\Services\Priest::class)->name('admin.services.priest');
+    Route::get('Services/Sales',\App\Livewire\Admin\Services\Sales::class)->name('admin.services.sales');
 
 
     Route::get('Shop/Category',\App\Livewire\Admin\Shop\Category::class)->name('admin.shop.category');
