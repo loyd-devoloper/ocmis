@@ -19,7 +19,23 @@ Route::get('/',\App\Livewire\Customer\Home::class)->name('home');
 Route::get('/niches',\App\Livewire\Customer\Niches::class)->name('niches');
 Route::get('/niches/building/{id}',\App\Livewire\Customer\NichesBuilding::class)->name('niches.building');
 Route::get('/niches/payment/{niche_id}',\App\Livewire\Customer\NichePayment::class)->name('niches.payment');
+
+
 Route::get('/services',\App\Livewire\Customer\Services::class)->name('services');
+Route::get('/services/payment/{service_id}',\App\Livewire\Customer\Services\PaymentPage::class)->name('services.payment');
+Route::get('/services/payment/success/{service_id}',function($service_id){
+    \App\Models\UserService::where('id',$service_id)->update([
+        'status'=>\App\Enums\StatusEnum::Paid
+    ]);
+
+    return redirect()->route('my_transaction');
+})->name('services.payment.success');
+
+
+Route::get('/MyTransaction',\App\Livewire\Customer\MyTransaction::class)->name('my_transaction');
+Route::get('/Memorial',\App\Livewire\Customer\Memorial::class)->name('memorial');
+
+
 Route::get('/login',\App\Livewire\Auth\Login::class)->name('login');
 Route::get('/register',\App\Livewire\Auth\Register::class)->name('register');
 
@@ -38,6 +54,7 @@ Route::middleware('admin.only')->prefix('admin')->group(function () {
 
     Route::get('Services/Category',\App\Livewire\Admin\Services\Category::class)->name('admin.services.category');
     Route::get('Services/Priest',\App\Livewire\Admin\Services\Priest::class)->name('admin.services.priest');
+    Route::get('Services/Transaction',\App\Livewire\Admin\Services\Transaction::class)->name('admin.services.transaction');
     Route::get('Services/Sales',\App\Livewire\Admin\Services\Sales::class)->name('admin.services.sales');
 
 

@@ -22,7 +22,7 @@
                 </details>
             </li>
             <li>
-                <details {{ request()->routeIs('admin.services.category') || request()->routeIs('admin.services.priest') || request()->routeIs('admin.services.sales') ? 'open' : 'close' }}>
+                <details {{ request()->routeIs('admin.services.category') || request()->routeIs('admin.services.priest') || request()->routeIs('admin.services.sales') || request()->routeIs('admin.services.transaction') ? 'open' : 'close' }}>
                     <summary>Services</summary>
                     <ul>
                         <li><a href="{{ route('admin.services.category') }}"
@@ -30,7 +30,8 @@
                         </li>
                         <li><a href="{{ route('admin.services.priest') }}"
                             class="{{ request()->routeIs('admin.services.priest') ? 'active' : '' }}">Priest</a></li>
-                        <li><a>Services Transactions</a></li>
+                        <li><a  href="{{ route('admin.services.transaction') }}"
+                            class="{{ request()->routeIs('admin.services.transaction') ? 'active' : '' }}">Services Transactions</a></li>
                         <li><a href="{{ route('admin.services.sales') }}"
                             class="{{ request()->routeIs('admin.services.sales') ? 'active' : '' }}">Sales</a></li>
 

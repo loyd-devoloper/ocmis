@@ -15,7 +15,8 @@
                     <li><a href="{{ route('services') }}"
                             class="{{ request()->routeIs('services') ? 'font-bold' : '' }}">Services</a></li>
                     <li><a>Shop</a></li>
-                    <li><a>Memorials</a></li>
+                    <li><a href="{{ route('memorial') }}"
+                        class="{{ request()->routeIs('memorial') ? 'font-bold' : '' }}">Memorials</a></li>
 
                     <li><a>About Us</a></li>
                 </ul>
@@ -50,7 +51,7 @@
                           </svg>
                           </summary>
                         <ul class="menu dropdown-content bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
-                            <li><a>My Transaction</a></li>
+                            <li><a href="{{ route('my_transaction') }}">My Transaction</a></li>
                           <li><a>Setting</a></li>
                           <li><a href="{{ route('logout') }}">Logout</a></li>
                         </ul>

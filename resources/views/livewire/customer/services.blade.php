@@ -23,7 +23,7 @@
                             <h2 class="card-title">{{ $service->name }}</h2>
                             <p>₱{{ $service->price }}</p>
                             <div class="card-actions justify-end">
-                                <button class="btn btn-primary">Avail Now</button>
+                                <a href="{{ route('services.payment',['service_id'=>$service->id]) }}" class="btn btn-primary">Avail </a>
                             </div>
                         </div>
                     </div>
