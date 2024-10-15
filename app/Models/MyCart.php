@@ -14,4 +14,9 @@ class MyCart extends Model
         'product_id',
         'quantity'
     ];
+
+    public function product()
+    {
+        return $this->hasOne(\App\Models\ShopProduct::class,'id','product_id');
+    }
 }

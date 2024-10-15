@@ -24,7 +24,7 @@
             </div>
             <div class="navbar-end">
                 <div class="dropdown dropdown-end">
-                    <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
+                    <a href="{{ route('cart') }}" tabindex="0" role="button" class="btn btn-ghost btn-circle">
                         <div class="indicator">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor">
@@ -33,16 +33,8 @@
                             </svg>
                             <span class="badge badge-sm indicator-item">8</span>
                         </div>
-                    </div>
-                    <div tabindex="0" class="card card-compact dropdown-content bg-base-100 z-[1] mt-3 w-52 shadow">
-                        <div class="card-body">
-                            <span class="text-lg font-bold">8 Items</span>
-                            <span class="text-info">Subtotal:</span>
-                            <div class="card-actions">
-                                <button class="btn btn-primary btn-block">View cart</button>
-                            </div>
-                        </div>
-                    </div>
+                    </a>
+
                 </div>
                 @auth
                 <div class="dropdown dropdown-end">
@@ -77,7 +69,7 @@
         </div>
     </nav>
 
-    <div class="min-h-[calc(100svh-4rem)] max-h-[calc(100svh-4rem)]   overflow-y-auto ">
+    <div class="min-h-[calc(100svh-4rem)] max-h-[calc(100svh-4rem)]   overflow-y-auto  ">
         {{ $slot }}
     </div>
 </div>
