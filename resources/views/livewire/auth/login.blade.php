@@ -9,7 +9,7 @@
                  </div>
                  <input type="text" wire:model="username" class="input input-bordered w-full " />
                 @error('username')
-                     <span class="label-text-alt text-red-500">Bottom Left label</span>
+                     <span class="label-text-alt text-red-500">{{ $message }}</span>
                 @enderror
              </label>
              <label class="form-control w-full">
@@ -19,7 +19,7 @@
                  </div>
                  <input type="password" wire:model="password"  class="input input-bordered w-full " />
                 @error('password')
-                     <span class="label-text-alt text-red-500">Bottom Left label</span>
+                     <span class="label-text-alt text-red-500">{{ $message }}</span>
                 @enderror
              </label>
             <div class="flex justify-end">

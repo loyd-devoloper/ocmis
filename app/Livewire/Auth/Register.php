@@ -25,7 +25,6 @@ class Register extends Component
         $validated = $this->validate([
             'fname'=>'required',
             'lname'=>'required',
-            'mname'=>'required',
             'address'=>'required',
             'username'=>'required',
             'contact'=>'required',

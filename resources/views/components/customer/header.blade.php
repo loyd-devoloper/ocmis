@@ -14,7 +14,8 @@
                     </li>
                     <li><a href="{{ route('services') }}"
                             class="{{ request()->routeIs('services') ? 'font-bold' : '' }}">Services</a></li>
-                    <li><a>Shop</a></li>
+                    <li><a href="{{ route('shop') }}"
+                        class="{{ request()->routeIs('shop') ? 'font-bold' : '' }}">Shop</a></li>
                     <li><a href="{{ route('memorial') }}"
                         class="{{ request()->routeIs('memorial') ? 'font-bold' : '' }}">Memorials</a></li>
 

@@ -8,7 +8,7 @@
                         <span class="label-text">Last Name</span>
 
                     </div>
-                    <input type="text" wire:model="lname" class="input input-bordered w-full " />
+                    <input type="text" wire:model="lname" class="input input-bordered w-full " required />
                     @error('lname')
                         <span class="label-text-alt text-red-500">{{ $message }}</span>
                     @enderror
@@ -18,7 +18,7 @@
                         <span class="label-text">First Name</span>
 
                     </div>
-                    <input type="text" wire:model="fname" class="input input-bordered w-full " />
+                    <input type="text" wire:model="fname" class="input input-bordered w-full " required />
                     @error('fname')
                         <span class="label-text-alt text-red-500">{{ $message }}</span>
                     @enderror
@@ -40,7 +40,7 @@
                         <span class="label-text">Email</span>
 
                     </div>
-                    <input type="text" wire:model="email" class="input input-bordered w-full " />
+                    <input type="email" wire:model="email" class="input input-bordered w-full " required/>
                     @error('email')
                         <span class="label-text-alt text-red-500">{{ $message }}</span>
                     @enderror
@@ -53,7 +53,7 @@
                         <span class="label-text">Contact Number</span>
 
                     </div>
-                    <input type="text" wire:model="contact" class="input input-bordered w-full " />
+                    <input type="tel" wire:model="contact" class="input input-bordered w-full " required/>
                     @error('contact')
                         <span class="label-text-alt text-red-500">{{ $message }}</span>
                     @enderror
@@ -63,7 +63,7 @@
                         <span class="label-text">Username</span>
 
                     </div>
-                    <input type="text" wire:model="username" class="input input-bordered w-full " />
+                    <input type="text" wire:model="username" class="input input-bordered w-full " required/>
                     @error('username')
                         <span class="label-text-alt text-red-500">{{ $message }}</span>
                     @enderror
@@ -74,7 +74,7 @@
                     <span class="label-text">Address</span>
 
                 </div>
-                <input type="text" wire:model="address" class="input input-bordered w-full " />
+                <input type="text" wire:model="address" class="input input-bordered w-full " required/>
                 @error('address')
                     <span class="label-text-alt text-red-500">{{ $message }}</span>
                 @enderror
@@ -86,7 +86,7 @@
                     <span class="label-text">password</span>
 
                 </div>
-                <input type="password" wire:model="password" class="input input-bordered w-full " />
+                <input type="password" wire:model="password" class="input input-bordered w-full " required/>
                 @error('password')
                     <span class="label-text-alt text-red-500">{{ $message }}</span>
                 @enderror
@@ -96,7 +96,7 @@
                     <span class="label-text">Confirm password</span>
 
                 </div>
-                <input type="password" wire:model="password_confirmation" class="input input-bordered w-full " />
+                <input type="password" wire:model="password_confirmation" class="input input-bordered w-full " required/>
                 @error('password_confirmation')
                     <span class="label-text-alt text-red-500">{{ $message }}</span>
                 @enderror

@@ -32,6 +32,8 @@ Route::get('/services/payment/success/{service_id}',function($service_id){
 })->name('services.payment.success');
 
 
+Route::get('/shop',\App\Livewire\Customer\Shop::class)->name('shop');
+
 Route::get('/MyTransaction',\App\Livewire\Customer\MyTransaction::class)->name('my_transaction');
 Route::get('/Memorial',\App\Livewire\Customer\Memorial::class)->name('memorial');
 
