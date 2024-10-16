@@ -81,7 +81,7 @@ class PaymentPage extends Component
                 'Key' => 'Value'
             ]
         ]);
-        dd($checkout);
+
         $createservice->update([
             'payment_ref' => $checkout->getData()['id'],
         ]);
