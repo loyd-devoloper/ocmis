@@ -14,6 +14,13 @@ class ShopOrder extends Model
         'status',
         'items',
         'payment_method',
-        'payment_ref'
+        'payment_ref',
+        'total',
+        'checkout_url'
     ];
+
+    public function userInfo()
+    {
+        return $this->hasOne(\App\Models\User::class, 'id','user_id');
+    }
 }

@@ -30,7 +30,8 @@ class Cart extends Component
             'user_id'=>Auth::id(),
             'status'=> \App\Enums\StatusEnum::NotPaid->value,
             'payment_method'=>$this->payment_method,
-            'items'=>json_encode($this->products)
+            'items'=>json_encode($this->products),
+            'total'=>$this->total
        ]);
        if($this->payment_method == 'Gcash')
        {
@@ -47,11 +48,16 @@ class Cart extends Component
                 'gcash'
 
             ],
-            'success_url' =>route('my_transaction'),
+            'success_url' =>route('my_product'),
             'statement_descriptor' => 'OCMIS ONLINE PAYMENT',
             'metadata' => [
                 'Key' => 'Value'
             ]
+        ]);
+
+        $orders->update([
+            'payment_ref' => $checkout->getData()['id'],
+            'checkout_url'=>$checkout->getData()['checkout_url']
         ]);
         return $this->redirect($checkout->getData()['checkout_url']);
        }

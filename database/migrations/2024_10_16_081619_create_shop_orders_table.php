@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('status');
             $table->string('payment_method');
             $table->string('payment_ref')->nullable();
+            $table->text('checkout_url')->nullable();
+            $table->string('total')->nullable();
             $table->timestamps();
         });
     }
