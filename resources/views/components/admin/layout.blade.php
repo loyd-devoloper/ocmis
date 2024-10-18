@@ -40,9 +40,12 @@
             </li>
             <li>
                 <details
-                    {{ request()->routeIs('admin.shop.category') || request()->routeIs('admin.shop.seller') || request()->routeIs('admin.shop.product') ? 'open' : 'close' }}>
+                    {{ request()->routeIs('admin.shop.category') || request()->routeIs('admin.shop.seller') || request()->routeIs('admin.shop.product') || request()->routeIs('admin.shop.transaction') ? 'open' : 'close' }}>
                     <summary>Shop</summary>
                     <ul>
+                        <li><a href="{{ route('admin.shop.transaction') }}"
+                            class="{{ request()->routeIs('admin.shop.transaction') ? 'active' : '' }}">Transaction</a>
+                    </li>
                         <li><a href="{{ route('admin.shop.category') }}"
                                 class="{{ request()->routeIs('admin.shop.category') ? 'active' : '' }}">Category</a>
                         </li>

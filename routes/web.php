@@ -62,6 +62,7 @@ Route::middleware('admin.only')->prefix('admin')->group(function () {
     Route::get('Services/Sales',\App\Livewire\Admin\Services\Sales::class)->name('admin.services.sales');
 
 
+    Route::get('Shop/Transaction',\App\Livewire\Admin\Shop\Transaction::class)->name('admin.shop.transaction');
     Route::get('Shop/Category',\App\Livewire\Admin\Shop\Category::class)->name('admin.shop.category');
     Route::get('Shop/Seller',\App\Livewire\Admin\Shop\Seller::class)->name('admin.shop.seller');
     Route::get('Shop/Product',\App\Livewire\Admin\Shop\Product::class)->name('admin.shop.product');

@@ -64,7 +64,7 @@ class Cart extends Component
        $this->ref = $orders->id;
        $this->invoice = true;
 
-
+       \App\Models\MyCart::with('product')->where('user_id',Auth::id())->delete();
 
 
     }
