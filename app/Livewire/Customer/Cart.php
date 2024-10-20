@@ -5,6 +5,7 @@ namespace App\Livewire\Customer;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use Luigel\Paymongo\Facades\Paymongo;
+use Filament\Notifications\Notification;
 
 class Cart extends Component
 {
@@ -21,6 +22,17 @@ class Cart extends Component
         $id->update([
             'quantity' =>  $type == 'increment' ? (int)$id->quantity + 1 : (int)$id->quantity - 1
         ]);
+        return $this->redirectRoute('cart');
+    }
+    public function removeProduct(\App\Models\MyCart $id)
+    {
+
+        $id->delete();
+        Notification::make()
+        ->title('Deleted successfully')
+        ->success()
+        ->send();
+        return $this->redirectRoute('cart');
     }
 
     public function checkout()

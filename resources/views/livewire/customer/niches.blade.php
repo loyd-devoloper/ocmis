@@ -13,11 +13,14 @@
             <div class="swiper-wrapper min-h-[50svh]  max-h-[50svh]  ">
                 <!-- Slides -->
                 @foreach ($buildings as $building)
-                <a href="{{ route('niches.building',['id'=>$building->id]) }}" class="swiper-slide relative !flex !justify-center !h-full ">
+               <div class="swiper-slide">
+                <a href="{{ route('niches.building',['id'=>$building->id]) }}" class=" relative !flex !justify-center !h-full ">
                     <img class="min-h-[40svh] max-h-[40svh]"
                     src="{{ asset('storage/'.$building?->image) }}"
                     alt="carousel image"  />
                 </a>
+                <h1 class="text-center">{{ $building->name }}</h1>
+               </div>
                 @endforeach
 
 

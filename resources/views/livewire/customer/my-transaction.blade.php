@@ -14,7 +14,7 @@
                 <x-filament::tabs.item>
                     My Niche
                 </x-filament::tabs.item>
-                <x-filament::tabs.item>
+                <x-filament::tabs.item tag="a" :href="route('my_memorial')">
                     My Memorial
                 </x-filament::tabs.item>
             </x-filament::tabs>

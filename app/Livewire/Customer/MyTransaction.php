@@ -64,6 +64,7 @@ class MyTransaction extends Component implements HasForms, HasTable
                         ->success()
                         ->send();
                 }),
+
             ])
            ;
     }

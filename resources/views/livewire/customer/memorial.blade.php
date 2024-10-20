@@ -8,10 +8,25 @@
         </div>
 
         <div>
-            {{ $this->modalFormAction }}
-            <x-filament-actions::modals />
-        </div>
 
+        </div>
+        <section class="p-10">
+            <h1 class="text-center text-2xl font-semibold ">Memorials</h1>
+            <div class="flex justify-center items-center gap-2">
+                {{ $this->modalFormAction }}
+                <x-filament-actions::modals />
+            </div>
+            <div class="grid grid-cols-4 max-w-screen-lg  mx-auto py-10 gap-10">
+                @foreach ($memorials as $memorial)
+                <a href="{{ route('niches.payment',['niche_id'=>$memorial->id]) }}" class="card bg-green-500 text-white px-4 pt-4 pb-10">
+                    {{-- <img src="{{ asset('storage/'.$memorial->images) }}" class="min-h-[4rem] max-w-[4rem] rounded-sm border border-black" alt=""> --}}
+                    <p class="font-medium">{{ $memorial->deceased_name }} </p>
+                    <p>Date: {{ \Carbon\Carbon::parse($memorial?->date_time)->format('F d, Y') }}</p>
+                    <p>Start: {{ \Carbon\Carbon::parse($memorial?->date_time)->format('h:i:s A') }}</p>
+                </a>
+                @endforeach
+            </div>
+        </section>
     </x-customer.header>
 
 </div>

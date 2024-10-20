@@ -1,5 +1,5 @@
 <div>
-    <nav class="border-b shadow-sm bg-[#ffffff] min-h-[4rem] max-h-[4rem]">
+    <nav class="border-b shadow-sm bg-[#ffffff] min-h-[4rem] max-h-[4rem]" wire:ignore>
         <div class="navbar min-h-[4rem] max-h-[4rem]  max-w-screen-xl mx-auto">
             <div class="navbar-start">
 

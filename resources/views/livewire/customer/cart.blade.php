@@ -4,7 +4,7 @@
 
 
         {{-- section --}}
-        <section class="p-10 w-full" x-data="dropdown(@entangle('invoice'),@entangle('ref'))">
+        <section class="p-10 w-full" x-data="dropdown(@entangle('invoice'), @entangle('ref'))">
             <div class="py-8" wire:ignore>
                 <div class="container mx-auto px-4">
                     <h1 class="text-2xl font-semibold mb-4">Shopping Cart</h1>
@@ -34,7 +34,10 @@
                                                 </td>
                                                 <td class="py-4">₱{{ $cart->product?->price }}</td>
                                                 <td class="py-4">
+
                                                     <div class="flex items-center">
+                                                        <x-filament::icon-button icon="heroicon-m-trash" color="danger"
+                                                        wire:click="removeProduct({{ $cart->id }})" label="New label"  class="mr-2"/>
                                                         <button class="border rounded-md py-2 px-4 mr-2"
                                                             wire:click="changeQuantity('decrement',{{ $cart->id }})">-</button>
                                                         <span class="text-center w-8">{{ $cart?->quantity }}</span>
@@ -51,34 +54,36 @@
                                 </table>
                             </div>
                         </div>
-                        <form wire:submit="checkout" class="md:w-1/4">
-                            <div class="bg-white rounded-lg shadow-md p-6">
-                                <h2 class="text-lg font-semibold mb-4">Summary</h2>
+                       @if (count($carts) > 0)
+                       <form wire:submit="checkout" class="md:w-1/4">
+                        <div class="bg-white rounded-lg shadow-md p-6">
+                            <h2 class="text-lg font-semibold mb-4">Summary</h2>
 
-                                <h1 class="text-xs">PAYMENT METHOD</h1>
-                                <div class="form-control w-fit space-x-2 text-xs">
-                                    <label class="label cursor-pointer">
+                            <h1 class="text-xs">PAYMENT METHOD</h1>
+                            <div class="form-control w-fit space-x-2 text-xs">
+                                <label class="label cursor-pointer">
 
-                                        <input type="radio" name="radio-10" wire:model="payment_method" value="Cash"
-                                            class="radio radio-xs mr-1" />Cash
-                                    </label>
-                                </div>
-                                <div class="form-control w-fit space-x-2 text-xs">
-                                    <label class="label cursor-pointer">
-
-                                        <input type="radio" name="radio-10" wire:model="payment_method" value="Gcash"
-                                            class="radio radio-xs  mr-1" checked="checked" />Gcash
-                                    </label>
-                                </div>
-                                <hr class="my-2">
-                                <div class="flex justify-between mb-2">
-                                    <span class="font-semibold">Total</span>
-                                    <span class="font-semibold">₱{{ $total }}</span>
-                                </div>
-                                <button type="submit"
-                                    class="bg-blue-500 text-white py-2 px-4 rounded-lg mt-4 w-full">Checkout</button>
+                                    <input type="radio" name="radio-10" wire:model="payment_method" value="Cash"
+                                        class="radio radio-xs mr-1" />Cash
+                                </label>
                             </div>
-                        </form>
+                            <div class="form-control w-fit space-x-2 text-xs">
+                                <label class="label cursor-pointer">
+
+                                    <input type="radio" name="radio-10" wire:model="payment_method" value="Gcash"
+                                        class="radio radio-xs  mr-1" checked="checked" />Gcash
+                                </label>
+                            </div>
+                            <hr class="my-2">
+                            <div class="flex justify-between mb-2">
+                                <span class="font-semibold">Total</span>
+                                <span class="font-semibold">₱{{ $total }}</span>
+                            </div>
+                            <button type="submit"
+                                class="bg-blue-500 text-white py-2 px-4 rounded-lg mt-4 w-full">Checkout</button>
+                        </div>
+                    </form>
+                       @endif
                     </div>
                 </div>
             </div>
@@ -89,11 +94,11 @@
                 <div class="w-11/12 max-w-5xl modal-box">
                     <h3 class="text-lg font-bold">Invoice</h3>
 
-                   <div class="indent-3 py-4">
-                    <p>{{ Auth::user()->username }}</p>
-                    <p x-text="'Invoice No: '+ref"></p>
-                    <p>{{ \Carbon\Carbon::now()->format('Y-m-d') }}</p>
-                   </div>
+                    <div class="indent-3 py-4">
+                        <p>{{ Auth::user()->username }}</p>
+                        <p x-text="'Invoice No: '+ref"></p>
+                        <p>{{ \Carbon\Carbon::now()->format('Y-m-d') }}</p>
+                    </div>
                     <div class="overflow-x-auto">
                         <table class="table table-md">
                             <thead>
@@ -143,7 +148,7 @@
 
 @script
     <script>
-        Alpine.data('dropdown', (invoice,ref) => ({
+        Alpine.data('dropdown', (invoice, ref) => ({
             invoice: invoice,
             ref: ref,
 

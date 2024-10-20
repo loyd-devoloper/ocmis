@@ -19,6 +19,7 @@ Route::get('/',\App\Livewire\Customer\Home::class)->name('home');
 Route::get('/niches',\App\Livewire\Customer\Niches::class)->name('niches');
 Route::get('/niches/building/{id}',\App\Livewire\Customer\NichesBuilding::class)->name('niches.building');
 Route::get('/niches/payment/{niche_id}',\App\Livewire\Customer\NichePayment::class)->name('niches.payment');
+Route::get('/niches/payment/checkout/{niche_id}/{type}',\App\Livewire\Customer\Niche\Checkout::class)->name('niches.payment.checkout');
 
 
 Route::get('/services',\App\Livewire\Customer\Services::class)->name('services');
@@ -37,6 +38,7 @@ Route::get('/cart',\App\Livewire\Customer\Cart::class)->name('cart');
 
 Route::get('/MyTransaction',\App\Livewire\Customer\MyTransaction::class)->name('my_transaction');
 Route::get('/MyProduct',\App\Livewire\Customer\MyProduct::class)->name('my_product');
+Route::get('/MyMemorial',\App\Livewire\Customer\MyMemorial::class)->name('my_memorial');
 Route::get('/Memorial',\App\Livewire\Customer\Memorial::class)->name('memorial');
 
 
@@ -60,6 +62,7 @@ Route::middleware('admin.only')->prefix('admin')->group(function () {
     Route::get('Services/Priest',\App\Livewire\Admin\Services\Priest::class)->name('admin.services.priest');
     Route::get('Services/Transaction',\App\Livewire\Admin\Services\Transaction::class)->name('admin.services.transaction');
     Route::get('Services/Sales',\App\Livewire\Admin\Services\Sales::class)->name('admin.services.sales');
+    Route::get('Services/Memorial',\App\Livewire\Admin\Services\Memorial::class)->name('admin.services.memorial');
 
 
     Route::get('Shop/Transaction',\App\Livewire\Admin\Shop\Transaction::class)->name('admin.shop.transaction');
