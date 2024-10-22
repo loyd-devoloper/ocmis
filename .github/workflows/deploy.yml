@@ -32,9 +32,9 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         script: |
           cd domains/ocmis.online/public_html/
-          cp .env.example .env
+          # cp .env.example .env
           composer2 install
-          php artisan storage:link
-          php artisan migrate
-          php artisan optimize
-          php artisan config:clear
+          # php artisan storage:link
+          # php artisan migrate
+          # php artisan optimize
+          # php artisan config:clear
