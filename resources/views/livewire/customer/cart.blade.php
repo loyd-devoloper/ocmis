@@ -42,7 +42,7 @@
                                                             wire:click="changeQuantity('decrement',{{ $cart->id }})">-</button>
                                                         <span class="text-center w-8">{{ $cart?->quantity }}</span>
                                                         <button class="border rounded-md py-2 px-4 ml-2"
-                                                            wire:click="changeQuantity('increment',{{ $cart->id }})">+</button>
+                                                            wire:click="changeQuantity('increment',{{ $cart->id }})" :disabled="{{ $cart->product?->quantity > 0 ? 'false' : 'true' }}">+</button>
                                                     </div>
                                                 </td>
                                                 <td class="py-4">

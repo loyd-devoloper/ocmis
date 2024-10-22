@@ -18,7 +18,13 @@ class Cart extends Component
 
     public function changeQuantity($type,\App\Models\MyCart $id)
     {
-
+        $quantity = \App\Models\ShopProduct::where('id',$id->product_id)->first();
+        if($quantity)
+        {
+         $quantity->update([
+             'quantity'=> $type == 'increment' ? (int)$quantity?->quantity - (int)$id->quantity : (int)$quantity?->quantity + (int)$id->quantity
+          ]);
+        }
         $id->update([
             'quantity' =>  $type == 'increment' ? (int)$id->quantity + 1 : (int)$id->quantity - 1
         ]);
@@ -26,7 +32,13 @@ class Cart extends Component
     }
     public function removeProduct(\App\Models\MyCart $id)
     {
-
+        $quantity = \App\Models\ShopProduct::where('id',$id->product_id)->first();
+        if($quantity)
+        {
+         $quantity->update([
+             'quantity'=>(int)$quantity?->quantity + (int)$id->quantity
+         ]);
+        }
         $id->delete();
         Notification::make()
         ->title('Deleted successfully')

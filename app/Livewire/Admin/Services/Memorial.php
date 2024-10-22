@@ -7,10 +7,13 @@ use Carbon\Carbon;
 use Filament\Tables;
 use Livewire\Component;
 use Filament\Tables\Table;
+use Filament\Support\Colors\Color;
+use Filament\Tables\Actions\Action;
 use Illuminate\Contracts\View\View;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Contracts\HasTable;
+use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Tables\Concerns\InteractsWithTable;
@@ -47,7 +50,26 @@ class Memorial extends Component implements HasForms, HasTable
             ])
 
             ->actions([
-                //
+                Action::make('approved')
+                ->color(Color::Green)->icon('heroicon-o-check')
+                ->hidden(fn($record) => $record->payment_method == 'Cash' ? false : true)
+                ->action(function($record){
+                    $record->update(['status' => \App\Enums\StatusEnum::Paid->value]);
+                    Notification::make()
+                    ->title('Updated successfully')
+                    ->success()
+                    ->send();
+                }),
+                Action::make('cancelled')->color(Color::Red)
+                ->icon('heroicon-o-x-mark')
+                ->hidden(fn($record) => $record->payment_method == 'Cash' || $record->status == \App\Enums\StatusEnum::Paid->value ? false : true)
+                ->action(function($record){
+                    $record->update(['status' => \App\Enums\StatusEnum::Cancelled->value]);
+                    Notification::make()
+                    ->title('Updated successfully')
+                    ->success()
+                    ->send();
+                }),
             ])
            ;
     }

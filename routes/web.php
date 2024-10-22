@@ -39,7 +39,9 @@ Route::get('/cart',\App\Livewire\Customer\Cart::class)->name('cart');
 Route::get('/MyTransaction',\App\Livewire\Customer\MyTransaction::class)->name('my_transaction');
 Route::get('/MyProduct',\App\Livewire\Customer\MyProduct::class)->name('my_product');
 Route::get('/MyMemorial',\App\Livewire\Customer\MyMemorial::class)->name('my_memorial');
+
 Route::get('/Memorial',\App\Livewire\Customer\Memorial::class)->name('memorial');
+Route::get('/MemorialView/{memorial_id}',\App\Livewire\Customer\MemorialView::class)->name('memorial_view');
 
 
 Route::get('/login',\App\Livewire\Auth\Login::class)->name('login');

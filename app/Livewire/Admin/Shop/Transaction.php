@@ -50,7 +50,7 @@ class Transaction extends Component implements HasForms, HasTable
                 }),
                 Action::make('cancelled')->color(Color::Red)
                 ->icon('heroicon-o-x-mark')
-                ->hidden(fn($record) => $record->payment_method == 'Cash' ? false : true)
+                ->hidden(fn($record) => $record->payment_method == 'Cash' || $record->status == \App\Enums\StatusEnum::Paid->value ? false : true)
                 ->action(function($record){
                     $record->update(['status' => \App\Enums\StatusEnum::Cancelled->value]);
                     Notification::make()
