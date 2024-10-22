@@ -28,7 +28,7 @@ jobs:
       with:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USER }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        key: ${{ secrets.SSH_PRIVATE_KEY_OCMIS }}
         port: ${{ secrets.SSH_PORT }}
         script: |
           cd domains/ocmis.online/public_html/
