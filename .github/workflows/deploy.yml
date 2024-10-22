@@ -36,6 +36,6 @@ jobs:
           composer2 update
           php artisan storage:link
           php artisan key:generate
-          php artisan migrate
+          php artisan migrate --seed
           php artisan optimize
           php artisan config:clear
