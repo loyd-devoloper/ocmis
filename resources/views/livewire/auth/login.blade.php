@@ -7,7 +7,7 @@
                      <span class="label-text">Username</span>
 
                  </div>
-                 <input type="text" wire:model="username" class="input input-bordered w-full " />
+                 <input type="text" wire:model="username" class="input input-bordered w-full " required />
                 @error('username')
                      <span class="label-text-alt text-red-500">{{ $message }}</span>
                 @enderror
@@ -17,7 +17,7 @@
                      <span class="label-text">password</span>
 
                  </div>
-                 <input type="password" wire:model="password"  class="input input-bordered w-full " />
+                 <input type="password" wire:model="password"  class="input input-bordered w-full " required />
                 @error('password')
                      <span class="label-text-alt text-red-500">{{ $message }}</span>
                 @enderror

@@ -59,7 +59,23 @@
                         </template>
                     </select>
                 </div>
+                <div>
+                    <h1 class="text-xs">PAYMENT METHOD</h1>
+                    <div class="form-control w-fit  text-xs">
+                        <label class="label cursor-pointer">
 
+                            <input type="radio" name="radio-10" wire:model="payment_method" value="Cash"
+                                class="radio radio-xs mr-1" required/>Cash
+                        </label>
+                    </div>
+                    <div class="form-control w-fit  text-xs">
+                        <label class="label cursor-pointer">
+
+                            <input type="radio" name="radio-10" wire:model="payment_method" value="Gcash"
+                                class="radio radio-xs  mr-1" required/>Gcash
+                        </label>
+                    </div>
+                </div>
                 <button class="btn btn-primary btn-md">Submit</button>
             </form>
         </section>

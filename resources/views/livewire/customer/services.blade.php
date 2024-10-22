@@ -23,7 +23,11 @@
                             <h2 class="card-title">{{ $service->name }}</h2>
                             <p>₱{{ $service->price }}</p>
                             <div class="card-actions justify-end">
-                                <a href="{{ route('services.payment',['service_id'=>$service->id]) }}" class="btn btn-primary">Avail </a>
+                               @if (Auth::check())
+                               <a href="{{ route('services.payment',['service_id'=>$service->id]) }}" class="btn btn-primary">Avail </a>
+                               @else
+                               <a href="{{ route('login') }}" class="btn btn-primary">Avail </a>
+                               @endif
                             </div>
                         </div>
                     </div>

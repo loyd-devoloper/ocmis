@@ -23,6 +23,8 @@ return new class extends Migration
             $table->string('status');
             $table->string('date')->nullable();
             $table->string('payment_ref')->nullable();
+            $table->string('payment_method');
+            $table->text('checkout_url')->nullable();
 
             $table->timestamps();
         });

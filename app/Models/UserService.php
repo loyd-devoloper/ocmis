@@ -30,6 +30,8 @@ class UserService extends Model
         'date',
 
         'payment_ref',
+        'checkout_url',
+        'payment_method',
 
     ];
 

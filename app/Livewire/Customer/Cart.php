@@ -71,6 +71,7 @@ class Cart extends Component
             'payment_ref' => $checkout->getData()['id'],
             'checkout_url'=>$checkout->getData()['checkout_url']
         ]);
+        \App\Models\MyCart::with('product')->where('user_id',Auth::id())->delete();
         return $this->redirect($checkout->getData()['checkout_url']);
        }
        $this->ref = $orders->id;

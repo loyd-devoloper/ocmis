@@ -23,6 +23,7 @@ class PaymentPage extends Component
     public $deceasedname;
     public $schedule;
     public $service_id;
+    public $payment_method = 'Cash';
     public function mount($service_id)
     {
         $this->service_id = $service_id;
@@ -39,6 +40,7 @@ class PaymentPage extends Component
             'user_id' => Auth::id(),
             'message' => $this->message,
             'deceasedname' => $this->deceasedname,
+            'payment_method' => $this->payment_method,
             'status' => \App\Enums\StatusEnum::NotPaid->value
         ]);
 
@@ -52,42 +54,48 @@ class PaymentPage extends Component
                 'priest_id' => $this->priest_id,
             ]);
         }
-        $checkout = Paymongo::checkout()->create([
-            'cancel_url' => route('services.payment',['service_id'=>$this->service_id]),
-            'billing' => [
-                'name' => Auth::user()->fname." ".Auth::user()->mname." ".Auth::user()->lname,
-                'email' => Auth::user()->email,
-                'phone' => Auth::user()->contact,
-            ],
-            'description' =>$createservice->id,
-            'line_items' => [
-                [
-                    'amount' => (float)$this->service['price'] * 100,
-                    'currency' => 'PHP',
+        if ($this->payment_method == 'Gcash') {
+            $checkout = Paymongo::checkout()->create([
+                'cancel_url' => route('services.payment', ['service_id' => $this->service_id]),
+                'billing' => [
+                    'name' => Auth::user()->fname . " " . Auth::user()->mname . " " . Auth::user()->lname,
+                    'email' => Auth::user()->email,
+                    'phone' => Auth::user()->contact,
+                ],
+                'description' => $createservice->id,
+                'line_items' => [
+                    [
+                        'amount' => (float)$this->service['price'] * 100,
+                        'currency' => 'PHP',
 
-                    'name' => $this->service['name'],
-                    'quantity' => 1
+                        'name' => $this->service['name'],
+                        'quantity' => 1
+                    ]
+                ],
+                'payment_method_types' => [
+
+                    'gcash',
+
+                    'paymaya'
+                ],
+                'success_url' => route('my_transaction'),
+                'statement_descriptor' => 'OCMIS ONLINE PAYMENT',
+                'metadata' => [
+                    'Key' => 'Value'
                 ]
-            ],
-            'payment_method_types' => [
+            ]);
 
-                'gcash',
-
-                'paymaya'
-            ],
-            'success_url' =>route('services.payment.success',['service_id'=>$createservice->id]),
-            'statement_descriptor' => 'OCMIS ONLINE PAYMENT',
-            'metadata' => [
-                'Key' => 'Value'
-            ]
-        ]);
-
-        $createservice->update([
-            'payment_ref' => $checkout->getData()['id'],
-        ]);
-       return $this->redirect($checkout->getData()['checkout_url']);
-
-
+            $createservice->update([
+                'payment_ref' => $checkout->getData()['id'],
+                'checkout_url' => $checkout->getData()['checkout_url']
+            ]);
+            return $this->redirect($checkout->getData()['checkout_url']);
+        }
+        Notification::make()
+        ->title('Submitted successfully')
+        ->success()
+        ->send();
+        return $this->redirectRoute('my_transaction');
     }
     #[Title('Service')]
     public function render()

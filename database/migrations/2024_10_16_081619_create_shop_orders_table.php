@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('payment_ref')->nullable();
             $table->text('checkout_url')->nullable();
             $table->string('total')->nullable();
+
+
             $table->timestamps();
         });
     }

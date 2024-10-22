@@ -28,11 +28,14 @@ class MyProduct extends Component implements HasForms, HasTable
         $orders = ShopOrder::query()->where('user_id',Auth::id())->where('payment_method','Gcash')->where('status',\App\Enums\StatusEnum::NotPaid->value)->get();
         foreach($orders as $order)
         {
-             $checkout = Paymongo::checkout()->find($order->payment_ref);
+            if(!!$order?->payment_ref)
+            {
+                $checkout = Paymongo::checkout()->find($order->payment_ref);
 
-            $order->update([
-                'status'=> !!$checkout->getData()['payments'] ? \App\Enums\StatusEnum::Paid->value : \App\Enums\StatusEnum::NotPaid->value
-            ]);
+                $order->update([
+                    'status'=> !!$checkout->getData()['payments'] ? \App\Enums\StatusEnum::Paid->value : \App\Enums\StatusEnum::NotPaid->value
+                ]);
+            }
 
         }
 
@@ -82,7 +85,7 @@ class MyProduct extends Component implements HasForms, HasTable
                             ->title('Updated successfully')
                             ->success()
                             ->send();
-                    }),
+                    })->hidden(fn($record) => $record?->status == \App\Enums\StatusEnum::Paid->value ? true : false),
             ])
         ;
     }
