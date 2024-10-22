@@ -9,7 +9,7 @@
                 <div class="container mx-auto px-4">
 
                     <div class="flex flex-col md:flex-row gap-4">
-                        <div class="md:w-3/4 grid grid-cols-2 gap-10">
+                        <div class="md:w-3/4 grid grid-cols-1 lg:grid-cols-2 gap-10">
                             <div class="bg-white rounded-lg shadow-md px-6 pb-6 pt-2 mb-4">
                                 <h1 class="text-2xl font-semibold mb-4">Niche</h1>
                                 <div class="flex gap-10">
@@ -93,7 +93,7 @@
                                    </div> --}}
                             </div>
                             {{-- product --}}
-                            <div class="bg-white rounded-lg shadow-md px-6 pb-6 pt-2 mb-4 col-span-2" >
+                            <div class="bg-white rounded-lg shadow-md px-6 pb-6 pt-2 mb-4 col-span-1 lg:col-span-2">
                                 <h1 class="text-2xl font-semibold mb-4">Products</h1>
                                 <label for="modalProduct" class="btn" class="flex items-center">
 
@@ -119,26 +119,50 @@
                                                     Action</th>
                                             </tr>
                                         </thead>
-                                        <tbody class="bg-white" >
+                                        <tbody class="bg-white">
 
-                                            <template x-for="(product,index) in convertJson(productArr)">
+                                            <template x-for="(product,index) in productArr">
 
 
-                                                <tr>
+                                                <tr x-show="!!product">
                                                     <td class="py-4 px-6 border-b border-gray-200"
                                                         x-text="product?.product_name">John Doe</td>
-                                                    <td class="py-4 px-6 border-b border-gray-200 truncate"
-                                                        x-text="product?.quantitys">johndoe@gmail.com</td>
+                                                    {{-- <td class="py-4 px-6 border-b border-gray-200 truncate"
+                                                        x-text="product?.quantitys">johndoe@gmail.com</td> --}}
+                                                    <td class="py-4 px-6 border-b border-gray-200 truncate">
+                                                        <div class="flex items-center">
+
+                                                            <button x-on:click="changeQuantity(product,'minus')"
+                                                                :disabled="product.quantitys < 2"
+                                                                class="border rounded-md py-2 px-4 mr-2">-</button>
+                                                            <span class="text-center w-8"
+                                                                x-text="product?.quantitys"></span>
+                                                            <button x-on:click="changeQuantity(product,'plus')"
+                                                                class="border rounded-md py-2 px-4 ml-2">+</button>
+                                                        </div>
+                                                    </td>
                                                     <td class="py-4 px-6 border-b border-gray-200"
                                                         x-text="product?.price">555-555-5555</td>
                                                     <td class="py-4 px-6 border-b border-gray-200">
-                                                        <span
-                                                            class="bg-green-500 text-white py-1 px-2 rounded-full text-xs">Active</span>
+                                                        <x-filament::icon-button icon="heroicon-m-trash" color="danger"
+                                                            x-on:click="removeProduct(product)" label="New label" />
                                                     </td>
                                                 </tr>
                                             </template>
                                             <!-- Add more rows here -->
                                         </tbody>
+                                        <tfoot class="bg-white">
+
+                                            <tr class="bg-gray-100">
+                                                <td class="py-4 px-6 border-b border-gray-200"></td>
+                                                <td class="py-4 px-6 border-b border-gray-200"></td>
+                                                <td class="py-4 px-6 border-b border-gray-200"><strong>Total</strong>
+                                                </td>
+                                                <td class="py-4 px-6 border-b border-gray-200"><strong
+                                                        x-text="'₱'+productTotal"></strong></td>
+
+                                            </tr>
+                                            </tbody>
                                     </table>
                                 </div>
                                 {{-- <div class="pt-2">
@@ -283,7 +307,7 @@
                                         <p>₱{{ $product->price }}</p>
 
                                         <div class="card-actions justify-end">
-                                            <button type="button" wire:click="addToCart({{ $product }})"
+                                            <button type="button" x-on:click="addProduct({{ $product }})"
                                                 class="btn border border-primary bg-none">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                     viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
@@ -301,7 +325,7 @@
 
                     <div class="modal-action">
 
-                        <label for="modalProduct" x-on:click="location.reload()" class="btn">Close</label>
+                        <label for="modalProduct" class="btn">Close</label>
                     </div>
                 </form>
             </div>
@@ -329,11 +353,58 @@
                 deceased_name: ''
             },
             serviceArr: serviceArr,
-            productArr: productArr,
+            productArr: [],
+            productTotal: 0,
             productNewArr: [],
             changeName(date, start, end) {
 
                 return `${date} -- ${this.changeTIme(start)} TO ${this.changeTIme(end)}`;
+            },
+            removeProduct(product) {
+                this.productArr = this.productArr.filter((val) => {
+
+                    if (!!val) {
+                        return val.id != product.id;
+                    } else {
+                        return val;
+                    }
+                })
+                var self = this;
+                    this.productTotal = 0;
+                    this.productArr.filter((val) => {
+
+                        if(!!val)
+                       {
+                        self.productTotal += parseInt(val.quantitys) * parseInt(val.price);
+                       }
+                        return val;
+                    })
+            },
+            addProduct(product) {
+
+
+                if (!!this.productArr[product.id]) {
+
+
+                    var x = this.productArr[product.id];
+                    this.productArr[product.id]['quantitys'] = x.quantitys + 1;
+                    this.productArr[product.id] = x;
+                    var self = this;
+                    this.productTotal = 0;
+                    this.productArr.filter((val) => {
+
+                        if(!!val)
+                       {
+                        self.productTotal += parseInt(val.quantitys) * parseInt(val.price);
+                       }
+                        return val;
+                    })
+
+                } else {
+                    product['quantitys'] = 1;
+                    this.productArr[product.id] = product;
+                }
+
             },
             changeTIme(time) {
                 var timeArray = time.split(':');
@@ -356,19 +427,31 @@
             submit() {
                 console.log(this.service)
             },
-            convertJson(jsonString) {
-
-                try {
-
-                    const jsonObject = JSON.parse(jsonString);
+            changeQuantity(product, type) {
+                if (!!this.productArr[product.id]) {
 
 
-                    return jsonObject;
+                    if (type == 'minus') {
+                        var x = this.productArr[product.id];
+                        this.productArr[product.id]['quantitys'] = x.quantitys - 1;
+                        this.productArr[product.id] = x;
 
-                } catch (error) {
-                    return [];
-                    // console.error('JSON parsing error:', error.message);
+                    } else {
+                        var x = this.productArr[product.id];
+                        this.productArr[product.id]['quantitys'] = x.quantitys + 1;
 
+                        this.productArr[product.id] = x;
+                    }
+                    var self = this;
+                    this.productTotal = 0;
+                    this.productArr.filter((val) => {
+
+                        if(!!val)
+                       {
+                        self.productTotal += parseInt(val.quantitys) * parseInt(val.price);
+                       }
+                        return val;
+                    })
                 }
             },
             init() {
@@ -381,9 +464,17 @@
                 if (localStorage.getItem('products') !== null) {
 
                     this.productArr = JSON.parse(localStorage.getItem('products'))
-                    this.productArr = JSON.stringify(this.productArr);
-                    // $wire.set('productArr', JSON.parse(this.productArr))
-                    // this.productArr = JSON.parse(this.productArr);
+                    var self = this;
+                    this.productTotal = 0;
+                    this.productArr.filter((val) => {
+
+                        if(!!val)
+                       {
+                        self.productTotal += parseInt(val.quantitys) * parseInt(val.price);
+                       }
+                        return val;
+                    })
+
 
                 }
 
@@ -402,11 +493,9 @@
                     if (val.length == 0) {
                         localStorage.removeItem("products");
                     } else {
+                        localStorage.setItem('products', JSON.stringify(val))
+                        this.productArr = JSON.stringify(val);
 
-
-
-                        var x = JSON.parse(localStorage.getItem('products'))
-                        this.productArr = JSON.stringify(x);
                         // $wire.set('productArr', JSON.parse(this.productArr))
                         // $wire.set('serviceArr', JSON.parse(this.productArr))
                     }

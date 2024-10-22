@@ -54,17 +54,7 @@
 </div>
 @script
 <script>
-    Alpine.data('main', () => ({
-        open: false,
-        swiper: null,
-        toggle() {
-            this.open = !this.open
-        },
-        init() {
-
-            localStorage.removeItem("products");
-            localStorage.removeItem("service");
-        }
-    }))
+     localStorage.removeItem("products");
+     localStorage.removeItem("service");
 </script>
 @endscript
