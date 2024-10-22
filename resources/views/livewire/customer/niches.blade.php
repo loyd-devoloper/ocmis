@@ -45,7 +45,8 @@
                 this.open = !this.open
             },
             init() {
-
+     localStorage.removeItem("products");
+                localStorage.removeItem("service");
                 this.swiper = new Swiper(this.$refs.container, {
                     effect: 'coverflow',
                     slideShadows: true,

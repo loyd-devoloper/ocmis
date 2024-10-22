@@ -15,6 +15,7 @@ class Niche extends Model
         'customer_id',
 
         'building_id',
+        'description',
 
         'niche_number',
 

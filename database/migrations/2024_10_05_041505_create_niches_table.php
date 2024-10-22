@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('customer_id')->nullable();
             $table->unsignedBigInteger('building_id')->nullable();
             $table->string('niche_number');
+            $table->text('description');
             $table->string('capacity');
             $table->string('status')->default('Available');
             $table->string('level');

@@ -503,7 +503,7 @@
                 })
                 var self = this;
 
-                this.$watch('priest', (value) => {
+                this.$watch('service.priest', (value) => {
                     console.log(value)
                     if (!!value) {
                         self.showSched = [];

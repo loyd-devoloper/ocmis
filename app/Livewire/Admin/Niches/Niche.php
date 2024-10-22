@@ -19,8 +19,10 @@ use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\RichEditor;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Columns\SelectColumn;
+use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Tables\Concerns\InteractsWithTable;
 
@@ -37,7 +39,7 @@ class Niche extends Component implements HasForms, HasTable
                     ->label('Add Niche')
                     ->icon('heroicon-o-plus-circle')
                     ->color(Color::Green)
-                    ->modalWidth(MaxWidth::ExtraLarge)
+                    ->modalWidth(MaxWidth::ScreenExtraLarge)
 
                     ->form([
                        Grid::make([
@@ -60,7 +62,24 @@ class Niche extends Component implements HasForms, HasTable
                             'Level 6' => 'Level 6',
                         ]),
                         TextInput::make('price')->numeric(),
-                        FileUpload::make('image')->directory('/niches/niche')->image(),
+                        FileUpload::make('image')->directory('/niches/niche')->image()->previewable(false),
+                        RichEditor::make('description')->columnSpanFull()
+                        ->toolbarButtons([
+
+                            'blockquote',
+                            'bold',
+                            'bulletList',
+                            'codeBlock',
+                            'h2',
+                            'h3',
+                            'italic',
+                            'link',
+                            'orderedList',
+                            'redo',
+                            'strike',
+                            'underline',
+                            'undo',
+                        ])
                        ])
                     ])
                     ->action(function ($data) {
@@ -111,7 +130,24 @@ class Niche extends Component implements HasForms, HasTable
                             'Level 6' => 'Level 6',
                         ]),
                         TextInput::make('price')->numeric(),
-                        FileUpload::make('image')->directory('/niches/niche')->image(),
+                        FileUpload::make('image')->directory('/niches/niche')->image()->previewable(false),
+                        RichEditor::make('description')->columnSpanFull()
+                        ->toolbarButtons([
+
+                            'blockquote',
+                            'bold',
+                            'bulletList',
+                            'codeBlock',
+                            'h2',
+                            'h3',
+                            'italic',
+                            'link',
+                            'orderedList',
+                            'redo',
+                            'strike',
+                            'underline',
+                            'undo',
+                        ])
                        ])
                     ])
                     ->action(function ($data,$record) {
