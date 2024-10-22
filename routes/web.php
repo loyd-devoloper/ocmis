@@ -34,11 +34,6 @@ Route::get('/services/payment/success/{service_id}',function($service_id){
 
 
 Route::get('/shop',\App\Livewire\Customer\Shop::class)->name('shop');
-Route::get('/cart',\App\Livewire\Customer\Cart::class)->name('cart');
-
-Route::get('/MyTransaction',\App\Livewire\Customer\MyTransaction::class)->name('my_transaction');
-Route::get('/MyProduct',\App\Livewire\Customer\MyProduct::class)->name('my_product');
-Route::get('/MyMemorial',\App\Livewire\Customer\MyMemorial::class)->name('my_memorial');
 
 Route::get('/Memorial',\App\Livewire\Customer\Memorial::class)->name('memorial');
 Route::get('/MemorialView/{memorial_id}',\App\Livewire\Customer\MemorialView::class)->name('memorial_view');
@@ -46,6 +41,16 @@ Route::get('/MemorialView/{memorial_id}',\App\Livewire\Customer\MemorialView::cl
 
 Route::get('/login',\App\Livewire\Auth\Login::class)->name('login');
 Route::get('/register',\App\Livewire\Auth\Register::class)->name('register');
+
+Route::middleware(['customer.only'])->group(function () {
+    Route::get('/cart',\App\Livewire\Customer\Cart::class)->name('cart');
+
+    Route::get('/MyTransaction',\App\Livewire\Customer\MyTransaction::class)->name('my_transaction');
+    Route::get('/MyProduct',\App\Livewire\Customer\MyProduct::class)->name('my_product');
+    Route::get('/MyMemorial',\App\Livewire\Customer\MyMemorial::class)->name('my_memorial');
+
+});
+
 
 Route::get('/logout',function(Request $request){
     // $request->session()->invalidate();
