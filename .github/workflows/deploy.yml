@@ -31,10 +31,10 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: ${{ secrets.SSH_PORT }}
         script: |
-          cd domains/cln-backend.tech/public_html/
-          # cp .env.example .env
-          # composer2 install
-          # php artisan storage:link
+          cd domains/ocmis.online/public_html/
+          cp .env.example .env
+          composer2 install
+          php artisan storage:link
           php artisan migrate
           php artisan optimize
           php artisan config:clear
