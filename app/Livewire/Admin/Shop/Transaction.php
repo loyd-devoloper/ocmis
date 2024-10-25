@@ -10,8 +10,10 @@ use Filament\Support\Colors\Color;
 use Filament\Tables\Actions\Action;
 use Illuminate\Contracts\View\View;
 use Filament\Forms\Contracts\HasForms;
+use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Contracts\HasTable;
+use Filament\Forms\Components\ViewField;
 use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Concerns\InteractsWithForms;
@@ -25,39 +27,58 @@ class Transaction extends Component implements HasForms, HasTable
     public function table(Table $table): Table
     {
         return $table
-        ->query(ShopOrder::query()->with('userInfo'))
+            ->query(ShopOrder::query()->with('userInfo'))
+            ->heading('Shop Transaction')
             ->columns([
-                TextColumn::make('id')->label('#Ref'),
+                TextColumn::make('id')->label('Ref'),
+                TextColumn::make('total')->label('Price')->formatStateUsing(fn($state) => "₱$state"),
 
                 TextColumn::make('userInfo.username')->label('User')->searchable(['username']),
                 TextColumn::make('payment_method'),
-                TextColumn::make('status')->searchable(),
+                TextColumn::make('status')->color(fn($record) => match ($record->status) {
+                    'Paid' => 'success', // Use a predefined color
+                    'Cancelled' => 'danger',
+                    'Not Paid' => 'warning',
+                    default => '', // Default color if no match
+                })->badge(),
                 TextColumn::make('created_at'),
             ])
             ->filters([
                 //
             ])
             ->actions([
+                ViewAction::make()
+                    ->form([
+                        ViewField::make('rating')->view('livewire.customer.products.items')
+
+
+                    ]),
                 Action::make('approved')
-                ->color(Color::Green)->icon('heroicon-o-check')
-                ->hidden(fn($record) => $record->payment_method == 'Cash' ? false : true)
-                ->action(function($record){
-                    $record->update(['status' => \App\Enums\StatusEnum::Paid->value]);
-                    Notification::make()
-                    ->title('Updated successfully')
-                    ->success()
-                    ->send();
-                }),
+                    ->color(Color::Green)->icon('heroicon-o-check')
+                    ->hidden(fn($record) => $record->payment_method == 'Cash' ? false : true)
+                    ->action(function ($record) {
+                        $record->update(['status' => \App\Enums\StatusEnum::Paid->value]);
+                        Notification::make()
+                            ->title('Updated successfully')
+                            ->success()
+                            ->send();
+                    })->hidden(fn($record) => $record?->status == \App\Enums\StatusEnum::Paid->value ? true : false),
                 Action::make('cancelled')->color(Color::Red)
-                ->icon('heroicon-o-x-mark')
-                ->hidden(fn($record) => $record->payment_method == 'Cash' || $record->status == \App\Enums\StatusEnum::Paid->value ? false : true)
-                ->action(function($record){
-                    $record->update(['status' => \App\Enums\StatusEnum::Cancelled->value]);
-                    Notification::make()
-                    ->title('Updated successfully')
-                    ->success()
-                    ->send();
-                }),
+                    ->icon('heroicon-o-x-mark')
+                    ->hidden(fn($record) => $record->payment_method == 'Cash' || $record->status == \App\Enums\StatusEnum::Paid->value ? false : true)
+                    ->action(function ($record) {
+                        foreach (json_decode($record?->items) as $item) {
+                            $product =  \App\Models\ShopProduct::where('id', $item->product_id)->first();
+                            $product->update([
+                                'quantity' => (int)$product->quantity + (int)$item->quantity
+                            ]);
+                        }
+                        $record->update(['status' => \App\Enums\StatusEnum::Cancelled->value]);
+                        Notification::make()
+                            ->title('Updated successfully')
+                            ->success()
+                            ->send();
+                    })->hidden(fn($record) => $record?->status == \App\Enums\StatusEnum::Cancelled->value ? true : false),
             ]);
     }
 

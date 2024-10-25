@@ -11,7 +11,7 @@
                     My Product Purchases
                 </x-filament::tabs.item>
 
-                <x-filament::tabs.item>
+                <x-filament::tabs.item tag="a" :href="route('my_niche')">
                     My Niche
                 </x-filament::tabs.item>
                 <x-filament::tabs.item tag="a" :href="route('my_memorial')">

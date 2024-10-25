@@ -4,7 +4,7 @@
 
 
 
-        <section class=" w-full" x-data="dropdown(@js($schedules), @entangle('serviceArr'), @entangle('productArr'))">
+        <section class=" w-full" x-data="dropdown(@js($schedules), @entangle('serviceArr'))">
             <div class="py-8" wire:ignore>
                 <div class="container mx-auto px-4">
 
@@ -43,7 +43,7 @@
                             {{-- service --}}
                             <div class="bg-white rounded-lg shadow-md px-6 pb-6 pt-2 mb-4">
                                 <h1 class="text-2xl font-semibold mb-4">Services</h1>
-                                <label x-show="serviceArr.length == 0" for="my_modal_6" class="btn"
+                                {{-- <label x-show="serviceArr.length == 0" for="my_modal_6" class="btn"
                                     class="flex items-center">
 
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -52,36 +52,36 @@
                                             d="M12 4.5v15m7.5-7.5h-15" />
                                     </svg>
                                     Add Services
-                                </label>
+                                </label> --}}
 
-                                <div x-show="serviceArr?.deceasedname" x-cloak class="flex gap-10">
+                                <div x-show="serviceArr?.deceased_name" x-cloak class="flex gap-10">
                                     <div>
                                         <img src="{{ asset('storage/' . $niche->image) }}"
                                             class="min-h-[4rem] rounded-md  max-w-[4rem] min-w-[4rem] max-h-[4rem]"
                                             alt="">
-                                        <button wire:click="removeService">Delete</button>
+                                        <button x-on:click="removeService">Delete</button>
                                     </div>
                                     <div class="text-sm">
                                         <p> <span class="font-bold">Deceased Name: </span><span
-                                                x-text="serviceArr?.deceasedname"></span></p>
+                                                x-text="serviceArr?.deceased_name"></span></p>
                                         <p><span class="font-bold">Message: </span>
                                             <span x-text="serviceArr?.message"></span>
                                         </p>
                                         <p><span class="font-bold">Own Priest: </span> <span
                                                 x-text="serviceArr?.own_priest ? 'Yes' : 'No'"></span></p>
                                         <p x-show="serviceArr?.own_priest == false"><span class="font-bold">Priest Name:
-                                            </span> <span x-text="serviceArr?.priest_name"></span></p>
+                                            </span> <span x-text="serviceArr?.priest_id"></span></p>
                                         <p x-show="serviceArr?.own_priest"><span class="font-bold">Schedule: </span>
-                                            <span x-text="serviceArr?.date_format"></span>
+                                            <span x-text="serviceArr?.date"></span>
                                         </p>
 
                                         <p x-show="serviceArr?.own_priest == false"><span class="font-bold">Schedule:
-                                            </span> <span x-text="serviceArr?.schedule_info"></span></p>
+                                            </span> <span x-text="serviceArr?.date_id"></span></p>
 
 
                                     </div>
                                 </div>
-                                <div x-show="serviceArr?.deceasedname" x-cloak class="pt-2">
+                                <div x-show="serviceArr?.deceased_name" x-cloak class="pt-2">
                                     <hr class=" content-black">
                                     <p class="float-right">Total:
                                         {{ number_format(10000) }}
@@ -95,7 +95,7 @@
                             {{-- product --}}
                             <div class="bg-white rounded-lg shadow-md px-6 pb-6 pt-2 mb-4 col-span-1 lg:col-span-2">
                                 <h1 class="text-2xl font-semibold mb-4">Products</h1>
-                                <label for="modalProduct" class="btn" class="flex items-center">
+                                {{-- <label for="modalProduct" class="btn" class="flex items-center">
 
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                         stroke-width="1.5" stroke="currentColor" class="size-5 text-blue-500">
@@ -103,7 +103,7 @@
                                             d="M12 4.5v15m7.5-7.5h-15" />
                                     </svg>
                                     Add Product
-                                </label>
+                                </label> --}}
 
                                 <div class="shadow-lg rounded-lg overflow-hidden mt-2">
                                     <table class="w-full table-fixed">
@@ -133,7 +133,7 @@
                                                         <div class="flex items-center">
 
                                                             <button x-on:click="changeQuantity(product,'minus')"
-                                                                :disabled="product.quantitys < 2"
+                                                                :disabled="product?.quantitys < 2"
                                                                 class="border rounded-md py-2 px-4 mr-2">-</button>
                                                             <span class="text-center w-8"
                                                                 x-text="product?.quantitys"></span>
@@ -171,29 +171,63 @@
                                    </div> --}}
                             </div>
                         </div>
-                        <form wire:submit="checkout" class="md:w-1/4">
+                        <form wire:submit="checkout" class="md:w-1/4" wire:ignore>
+
                             <div class="bg-white rounded-lg shadow-md p-6">
                                 <h2 class="text-lg font-semibold mb-4">Summary</h2>
+                                <div >
+                                    <p class="text-xs">PAYMENT TYPE </p>
 
+                                    <input type="radio" wire:model="payment_type" x-model="payment_type"
+                                        value="Full" class="radio  radio-xs" /> <span class="text-sm">Full</span>
+                                    <br>
+                                    <input type="radio" wire:model="payment_type" x-model="payment_type"
+                                        value="Installment" class="radio  radio-xs" /><span class="text-sm">
+                                        Installment</span>
+                                    <div x-show="payment_type == 'Installment'" x-cloak x-transition>
+                                        <hr class="my-2">
+
+                                        <label class="form-control w-full max-w-xs">
+                                            <span class="label-text">New Price (price + 2%)</span>
+                                            <input type="text" placeholder="Type here"
+                                                class="input input-bordered w-full max-w-xs bg-gray-100"
+                                                :value="finalTotal" readonly />
+                                        </label>
+                                        <label class="form-control w-full max-w-xs">
+                                            <span class="label-text">Down Payment</span>
+                                            <input type="text" placeholder="Type here"
+                                                class="input input-bordered w-full max-w-xs bg-gray-100"
+                                                value="{{ number_format($downpayment) }}" readonly />
+                                        </label>
+                                        <label class="form-control w-full max-w-xs">
+                                            <span class="label-text">Montly Dues for 3 Months</span>
+                                            <input type="text" placeholder="Type here"
+                                                class="input input-bordered w-full max-w-xs bg-gray-100"
+                                                :value="monthly" readonly />
+                                        </label>
+                                    </div>
+                                </div>
                                 <h1 class="text-xs">PAYMENT METHOD</h1>
                                 <div class="form-control w-fit space-x-2 text-xs">
                                     <label class="label cursor-pointer">
 
-                                        <input type="radio" name="radio-10" wire:model="payment_method"
-                                            value="Cash" class="radio radio-xs mr-1" />Cash
+                                        <input type="radio"  wire:model="payment_method" value="Cash"
+                                            class="radio radio-xs mr-1" checked="checked" required />Cash
                                     </label>
                                 </div>
                                 <div class="form-control w-fit space-x-2 text-xs">
                                     <label class="label cursor-pointer">
 
-                                        <input type="radio" name="radio-10" wire:model="payment_method"
-                                            value="Gcash" class="radio radio-xs  mr-1" checked="checked" />Gcash
+                                        <input type="radio"  wire:model="payment_method"
+                                            value="Gcash" class="radio radio-xs  mr-1"  required/>Gcash
                                     </label>
                                 </div>
+
+
                                 <hr class="my-2">
                                 <div class="flex justify-between mb-2">
                                     <span class="font-semibold">Total</span>
-                                    <span class="font-semibold">₱1222</span>
+                                    <span class="font-semibold" x-text="payment_type == 'Full' ? subtotal : 10000"></span>
                                 </div>
                                 <button type="submit"
                                     class="bg-blue-500 text-white py-2 px-4 rounded-lg mt-4 w-full">Checkout</button>
@@ -337,8 +371,9 @@
 
 @script
     <script>
-        Alpine.data('dropdown', (schedules, serviceArr, productArr) => ({
+        Alpine.data('dropdown', (schedules, serviceArr) => ({
             open: false,
+            payment_type: 'Full',
             my_modal_6: false,
             modalProduct: false,
             schedules: schedules,
@@ -352,33 +387,44 @@
                 message: 'ss',
                 deceased_name: ''
             },
-            serviceArr: serviceArr,
+            serviceArr: [],
             productArr: [],
             productTotal: 0,
             productNewArr: [],
+            finalTotal: 0,
+            subtotal: 0,
+            monthly: 0,
             changeName(date, start, end) {
 
                 return `${date} -- ${this.changeTIme(start)} TO ${this.changeTIme(end)}`;
             },
+            removeService() {
+
+                localStorage.removeItem("service");
+                this.serviceArr = [];
+                $wire.set('serviceArr', this.serviceArr)
+            },
             removeProduct(product) {
-                this.productArr = this.productArr.filter((val) => {
+                var x = this.productArr.map((val, key) => {
+                    if (!!val) {
+                        if (val.id !== product.id) {
+
+                            return this.productArr[key] = val;
+                        }
+                    }
+                    // return val?.id !== product.id;
+                });
+                this.productArr = x;
+                var self = this;
+                this.productTotal = 0;
+                this.productArr.filter((val) => {
 
                     if (!!val) {
-                        return val.id != product.id;
-                    } else {
-                        return val;
-                    }
-                })
-                var self = this;
-                    this.productTotal = 0;
-                    this.productArr.filter((val) => {
-
-                        if(!!val)
-                       {
                         self.productTotal += parseInt(val.quantitys) * parseInt(val.price);
-                       }
-                        return val;
-                    })
+                    }
+                    return val;
+                })
+                this.alltotal()
             },
             addProduct(product) {
 
@@ -393,10 +439,9 @@
                     this.productTotal = 0;
                     this.productArr.filter((val) => {
 
-                        if(!!val)
-                       {
-                        self.productTotal += parseInt(val.quantitys) * parseInt(val.price);
-                       }
+                        if (!!val) {
+                            self.productTotal += parseInt(val.quantitys) * parseInt(val.price);
+                        }
                         return val;
                     })
 
@@ -425,7 +470,22 @@
                 return time12Hour;
             },
             submit() {
-                console.log(this.service)
+
+            },
+            alltotal() {
+                var price = @js((float)$niche?->price);
+                var servicePrice = this.serviceArr.deceased_name ? 10000 : 0;
+                console.log(servicePrice)
+                var subtotal = this.productTotal+servicePrice+price;
+                this.subtotal = subtotal;
+                $wire.set('subtotal', subtotal)
+                this.finalTotal = subtotal + (2.5 / 100 * subtotal);
+
+                $wire.set('newPrice', this.finalTotal)
+
+                this.monthly = this.finalTotal - servicePrice / 3 ;
+                this.monthly = parseFloat(this.monthly ).toFixed(3);
+                $wire.set('perMonth', this.monthly)
             },
             changeQuantity(product, type) {
                 if (!!this.productArr[product.id]) {
@@ -446,20 +506,20 @@
                     this.productTotal = 0;
                     this.productArr.filter((val) => {
 
-                        if(!!val)
-                       {
-                        self.productTotal += parseInt(val.quantitys) * parseInt(val.price);
-                       }
+                        if (!!val) {
+                            self.productTotal += parseInt(val.quantitys) * parseInt(val.price);
+                        }
                         return val;
                     })
                 }
+                this.alltotal()
             },
             init() {
 
                 if (localStorage.getItem('service') !== null) {
 
                     this.serviceArr = JSON.parse(localStorage.getItem('service'))
-                    // $wire.set('products', JSON.parse(this.productArr))
+                    $wire.set('serviceArr', this.serviceArr)
                 }
                 if (localStorage.getItem('products') !== null) {
 
@@ -468,13 +528,13 @@
                     this.productTotal = 0;
                     this.productArr.filter((val) => {
 
-                        if(!!val)
-                       {
-                        self.productTotal += parseInt(val.quantitys) * parseInt(val.price);
-                       }
+                        if (!!val) {
+                            self.productTotal += parseInt(val.quantitys) * parseInt(val.price);
+                        }
                         return val;
                     })
 
+                    $wire.set('productArr', this.productArr)
 
                 }
 
@@ -486,6 +546,7 @@
                         localStorage.removeItem("service");
                     } else {
                         localStorage.setItem('service', JSON.stringify(val))
+
                     }
 
                 })
@@ -495,7 +556,7 @@
                     } else {
                         localStorage.setItem('products', JSON.stringify(val))
                         this.productArr = JSON.stringify(val);
-
+                        $wire.set('serviceArr', this.productArr)
                         // $wire.set('productArr', JSON.parse(this.productArr))
                         // $wire.set('serviceArr', JSON.parse(this.productArr))
                     }
@@ -503,7 +564,7 @@
                 })
                 var self = this;
 
-                this.$watch('service.priest', (value) => {
+                this.$watch('priest', (value) => {
                     console.log(value)
                     if (!!value) {
                         self.showSched = [];
@@ -522,7 +583,7 @@
                     }
                 })
 
-
+                this.alltotal()
 
             }
         }))

@@ -15,4 +15,9 @@ class Category extends Model
         "status",
         'image'
     ];
+
+    public function transactions()
+    {
+        return $this->hasMany(\App\Models\UserService::class,'service_id','id');
+    }
 }

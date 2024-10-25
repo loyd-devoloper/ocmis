@@ -18,8 +18,9 @@ use Illuminate\Support\Facades\Request;
 Route::get('/',\App\Livewire\Customer\Home::class)->name('home');
 Route::get('/niches',\App\Livewire\Customer\Niches::class)->name('niches');
 Route::get('/niches/building/{id}',\App\Livewire\Customer\NichesBuilding::class)->name('niches.building');
+Route::get('/niches/view/{id}',\App\Livewire\Customer\Niche\View::class)->name('niches.view');
 Route::get('/niches/payment/{niche_id}',\App\Livewire\Customer\NichePayment::class)->name('niches.payment');
-Route::get('/niches/payment/checkout/{niche_id}/{type}',\App\Livewire\Customer\Niche\Checkout::class)->name('niches.payment.checkout');
+Route::get('/niches/payment/checkout/{niche_id}',\App\Livewire\Customer\Niche\Checkout::class)->name('niches.payment.checkout');
 
 
 Route::get('/services',\App\Livewire\Customer\Services::class)->name('services');
@@ -48,6 +49,7 @@ Route::middleware(['customer.only'])->group(function () {
     Route::get('/MyTransaction',\App\Livewire\Customer\MyTransaction::class)->name('my_transaction');
     Route::get('/MyProduct',\App\Livewire\Customer\MyProduct::class)->name('my_product');
     Route::get('/MyMemorial',\App\Livewire\Customer\MyMemorial::class)->name('my_memorial');
+    Route::get('/MyNiche',\App\Livewire\Customer\MyNiche::class)->name('my_niche');
 
 });
 
@@ -76,4 +78,9 @@ Route::middleware('admin.only')->prefix('admin')->group(function () {
     Route::get('Shop/Category',\App\Livewire\Admin\Shop\Category::class)->name('admin.shop.category');
     Route::get('Shop/Seller',\App\Livewire\Admin\Shop\Seller::class)->name('admin.shop.seller');
     Route::get('Shop/Product',\App\Livewire\Admin\Shop\Product::class)->name('admin.shop.product');
+    Route::get('Shop/Sales',\App\Livewire\Admin\ShopSales::class)->name('admin.shop.sales');
+
+    Route::get('Forecast/Buildings',\App\Livewire\Admin\Forecast\Index::class)->name('admin.forecast.buildings');
+    Route::get('Forecast/Niches/{building_id}',\App\Livewire\Admin\Forecast\Niche::class)->name('admin.forecast.niches');
+    Route::get('Forecast/Niche/{niche_id}',\App\Livewire\Admin\Forecast\View::class)->name('admin.forecast.view');
 });

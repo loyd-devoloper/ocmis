@@ -41,7 +41,8 @@ class PaymentPage extends Component
             'message' => $this->message,
             'deceasedname' => $this->deceasedname,
             'payment_method' => $this->payment_method,
-            'status' => \App\Enums\StatusEnum::NotPaid->value
+            'status' => \App\Enums\StatusEnum::NotPaid->value,
+            'price' => (float)$this->service['price'],
         ]);
 
         if ($this->own_priest) {

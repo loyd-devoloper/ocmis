@@ -27,15 +27,31 @@ class Niche extends Model
 
         'price',
 
-        'paymentmethod',
+        'payment_method',
 
-        'paymenttype',
-        'image'
+        'payment_type',
+        'image',
+        'price_checkout',
+        'total_paid',
+        'service',
+        'products',
+        'image',
+        'checkout_url',
+        'payment_ref',
+        'status_payment',
 
     ];
 
     public function buildingInfo()
     {
         return $this->hasOne(\App\Models\Building::class,'id','building_id');
+    }
+    public function customerInfo()
+    {
+        return $this->hasOne(\App\Models\User::class,'id','customer_id');
+    }
+    public function installments()
+    {
+        return $this->hasMany(\App\Models\NicheInstallment::class,'niche_id','id');
     }
 }

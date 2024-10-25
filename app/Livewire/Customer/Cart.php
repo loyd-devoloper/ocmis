@@ -104,9 +104,11 @@ class Cart extends Component
             $this->products[] =   [
                 'amount' => (float)$cart->product?->price * 100,
                 'currency' => 'PHP',
-
                 'name' => $cart->product?->product_name,
-                'quantity' => (int)$cart->quantity
+                'quantity' => (int)$cart->quantity,
+                'product_id' => $cart->product_id,
+                'user_id' => $cart->user_id,
+                'price' => $cart->product?->price
             ];
         }
 

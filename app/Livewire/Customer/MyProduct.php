@@ -13,8 +13,10 @@ use Filament\Support\Enums\MaxWidth;
 use Illuminate\Support\Facades\Auth;
 use Luigel\Paymongo\Facades\Paymongo;
 use Filament\Forms\Contracts\HasForms;
+use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Contracts\HasTable;
+use Filament\Forms\Components\ViewField;
 use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Concerns\InteractsWithForms;
@@ -24,68 +26,92 @@ class MyProduct extends Component implements HasForms, HasTable
 {
     use InteractsWithForms;
     use InteractsWithTable;
-    public function mount() {
-        $orders = ShopOrder::query()->where('user_id',Auth::id())->where('payment_method','Gcash')->where('status',\App\Enums\StatusEnum::NotPaid->value)->get();
-        foreach($orders as $order)
-        {
-            if(!!$order?->payment_ref)
-            {
+    public function mount()
+    {
+        $orders = ShopOrder::query()->where('user_id', Auth::id())->where('payment_method', 'Gcash')->where('status', \App\Enums\StatusEnum::NotPaid->value)->get();
+        foreach ($orders as $order) {
+            if (!!$order?->payment_ref) {
                 $checkout = Paymongo::checkout()->find($order->payment_ref);
 
                 $order->update([
-                    'status'=> !!$checkout->getData()['payments'] ? \App\Enums\StatusEnum::Paid->value : \App\Enums\StatusEnum::NotPaid->value
+                    'status' => !!$checkout->getData()['payments'] ? \App\Enums\StatusEnum::Paid->value : \App\Enums\StatusEnum::NotPaid->value
                 ]);
             }
-
         }
-
+    }
+    public function getViewData($record)
+    {
+        return [
+            'rating' => $record->rating,
+            // Add more data as needed
+        ];
     }
     public function table(Table $table): Table
     {
         return $table
-            ->query(ShopOrder::query()->where('user_id',Auth::id())->with('userInfo'))
+            ->query(ShopOrder::query()->where('user_id', Auth::id())->with('userInfo'))
             ->columns([
                 TextColumn::make('id')->label('Ref'),
+                TextColumn::make('total')->label('Price')->formatStateUsing(fn($state) => "₱$state"),
 
                 TextColumn::make('userInfo.username')->label('User')->searchable(['username']),
                 TextColumn::make('payment_method'),
-                TextColumn::make('status')->searchable(),
+                TextColumn::make('status')->color(fn ($record) => match ($record->status) {
+                    'Paid' => 'success', // Use a predefined color
+                    'Cancelled' => 'danger',
+                    'Not Paid' => 'warning',
+                    default => '', // Default color if no match
+                })->badge(),
                 TextColumn::make('created_at'),
             ])
             ->filters([
                 //
             ])
             ->actions([
+                ViewAction::make()
+                    ->form([
+                        ViewField::make('rating')->view('livewire.customer.products.items')
+
+
+                    ]),
                 Action::make('pay')
                     ->hidden(function ($record) {
                         if (!!$record->payment_ref) {
 
-                           return $record->status == \App\Enums\StatusEnum::Paid->value || $record->status == \App\Enums\StatusEnum::Cancelled->value ? true : false;
+                            return $record->status == \App\Enums\StatusEnum::Paid->value || $record->status == \App\Enums\StatusEnum::Cancelled->value ? true : false;
                         } else {
                             return true;
                         }
                     })
                     ->icon('heroicon-o-banknotes')
                     ->color(Color::Green)
-                    ->url(function($record){
+                    ->url(function ($record) {
                         if (!!$record->payment_ref) {
-                           return $record->checkout_url;
+                            return $record->checkout_url;
                         } else {
                             return '#';
                         }
                     })->openUrlInNewTab(),
-                    Action::make('cancel')
+                Action::make('cancel')
                     ->color(Color::Red)
                     ->modalWidth(MaxWidth::Medium)
-                    ->action(function ($data,$record) {
-                       $record->update([
-                        'status'=>\App\Enums\StatusEnum::Cancelled->value
-                       ]);
+                    ->action(function ($data, $record) {
+                        foreach (json_decode($record?->items) as $item) {
+                            $product =  \App\Models\ShopProduct::where('id', $item->product_id)->first();
+                            $product->update([
+                                'quantity' => (int)$product->quantity + (int)$item->quantity
+                            ]);
+                        }
+                        $record->update([
+                            'status' => \App\Enums\StatusEnum::Cancelled->value
+                        ]);
+
                         Notification::make()
                             ->title('Updated successfully')
                             ->success()
                             ->send();
-                    })->hidden(fn($record) => $record?->status == \App\Enums\StatusEnum::Paid->value ? true : false),
+                    })
+                    ->hidden(fn($record) => $record?->status == \App\Enums\StatusEnum::Paid->value || $record?->status == \App\Enums\StatusEnum::Cancelled->value ? true : false),
             ])
         ;
     }
