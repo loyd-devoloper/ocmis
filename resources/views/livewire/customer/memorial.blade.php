@@ -13,7 +13,9 @@
         <section class="p-10">
             <h1 class="text-center text-2xl font-semibold ">Memorials</h1>
             <div class="flex justify-center items-center gap-2">
-                {{ $this->modalFormAction }}
+               @auth
+               {{ $this->modalFormAction }}
+               @endauth
                 <x-filament-actions::modals />
             </div>
             <div class="grid grid-cols-4 max-w-screen-lg  mx-auto py-10 gap-10">
