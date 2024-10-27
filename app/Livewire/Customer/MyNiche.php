@@ -22,6 +22,7 @@ use Filament\Tables\Columns\ImageColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Tables\Concerns\InteractsWithTable;
+use SebastianBergmann\Type\TrueType;
 
 class MyNiche extends Component implements HasForms, HasTable
 {
@@ -62,15 +63,12 @@ class MyNiche extends Component implements HasForms, HasTable
                 TextColumn::make('capacity'),
                 TextColumn::make('status'),
                 TextColumn::make('level'),
-                TextColumn::make('installments')
-
-                    ->listWithLineBreaks()
-                    ->limitList(3)
-                    ->expandableLimitedList()
-                    ->formatStateUsing(fn($state) => $state->status == \App\Enums\StatusEnum::NotPaid->value ? new HtmlString("<span class='monthlyDanger'>$state->price</span>") : new HtmlString("<span class='monthlySuccess'>$state->price</span>")),
 
                 TextColumn::make('payment_method'),
                 TextColumn::make('payment_type'),
+                TextColumn::make('plan')->formatStateUsing(fn($state) => "$state Months")
+
+                ,
 
                 TextColumn::make('price')->label('Niche Price'),
                 TextColumn::make('price_checkout')->label('Total'),

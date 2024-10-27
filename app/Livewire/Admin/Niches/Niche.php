@@ -2,10 +2,11 @@
 
 namespace App\Livewire\Admin\Niches;
 
+use Carbon\Carbon;
 use Livewire\Component;
 use Filament\Tables\Table;
-use Livewire\Attributes\Title;
 
+use Livewire\Attributes\Title;
 use Filament\Support\Colors\Color;
 use Illuminate\Support\HtmlString;
 use Filament\Forms\Components\Grid;
@@ -105,18 +106,13 @@ class Niche extends Component implements HasForms, HasTable
                 TextColumn::make('buildingInfo.name')->label('Buinding Name')->searchable(),
                 TextColumn::make('niche_number'),
                 TextColumn::make('capacity'),
-                TextColumn::make('installments')
-
-                ->listWithLineBreaks()
-                ->limitList(3)
-                ->expandableLimitedList()
-                ->formatStateUsing(fn($state) => $state->status == \App\Enums\StatusEnum::NotPaid->value ? new HtmlString("<span class='monthlyDanger'>$state->price</span>") : new HtmlString("<span class='monthlySuccess'>$state->price</span>")),
 
                 TextColumn::make('status'),
                 TextColumn::make('customerInfo.username'),
                 TextColumn::make('level'),
                 TextColumn::make('payment_method'),
                 TextColumn::make('payment_type'),
+                TextColumn::make('plan')->formatStateUsing(fn($state) => "$state Months"),
 
                 TextColumn::make('price')->label('Niche Price'),
                 TextColumn::make('price_checkout')->label('Total'),
@@ -135,47 +131,50 @@ class Niche extends Component implements HasForms, HasTable
                             $arr = [];
                             $i = 1;
                             foreach ($record?->installments as $installment) {
-                                $label = '';
-                                if ($i == 1) {
-                                    $label = 'First Month';
-                                } elseif ($i == 2) {
-                                    $label = 'Second Month';
-                                } elseif ($i == 3) {
-                                    $label = 'Third Month';
-                                }
+                                $label = Carbon::parse($installment->date)->format('F d, Y')."($installment->price)";
+
                                 $arr[] =    Grid::make(5)->schema([
-                                    Placeholder::make('dsasdad')->columnSpan(3)->label($label),
+                                    Placeholder::make('dsasdad')->columnSpan(
+                                        3
+                                    )->label(false)->content($label)
+                                        ->extraAttributes(['class' => $installment->status == \App\Enums\StatusEnum::Paid->value ? 'nicheLable' : 'nicheLablenot']),
+
                                     \Filament\Forms\Components\Actions::make([
 
-                                        \Filament\Forms\Components\Actions\Action::make($i.'comment')
-                                            ->iconButton()
+                                        \Filament\Forms\Components\Actions\Action::make($i . 'comment')
+
                                             ->extraAttributes(['title' => 'Add Comment'])
                                             ->icon('heroicon-o-check')
-                                            ->label('add comment')
+                                            ->label('Paid')
                                             ->color(Color::Green)
 
                                             ->action(function ($data, $record) use ($installment) {
-                                               $installment->update(['status'=>\App\Enums\StatusEnum::Paid->value]);
+                                                $record->update([
+                                                    'total_paid' => (float)$record->total_paid + (float)$installment->price
+                                                ]);
+                                                $installment->update(['status' => \App\Enums\StatusEnum::Paid->value]);
+                                                $this->resetPage();
+                                                $this->resetTable();
                                                 Notification::make()
                                                     ->title('Updated successfully')
                                                     ->success()
                                                     ->send();
-                                            }),
+                                            })->hidden($installment->status == \App\Enums\StatusEnum::Paid->value ? true : false),
 
-                                        \Filament\Forms\Components\Actions\Action::make($i.'x')
-                                            ->iconButton()
-                                            ->extraAttributes(['title' => 'Add Comment'])
-                                            ->icon('heroicon-o-x-mark')
-                                            ->label('add comment')
-                                            ->color(Color::Red)
+                                        // \Filament\Forms\Components\Actions\Action::make($i . 'x')
 
-                                            ->action(function ($data, $record) use ($installment) {
-                                                $installment->update(['status'=>\App\Enums\StatusEnum::NotPaid->value]);
-                                                Notification::make()
-                                                    ->title('Updated successfully')
-                                                    ->success()
-                                                    ->send();
-                                            })
+                                        //     ->extraAttributes(['title' => 'Add Comment'])
+                                        //     ->icon('heroicon-o-x-mark')
+                                        //     ->label('Not Paid')
+                                        //     ->color(Color::Red)
+
+                                        //     ->action(function ($data, $record) use ($installment) {
+                                        //         $installment->update(['status' => \App\Enums\StatusEnum::NotPaid->value]);
+                                        //         Notification::make()
+                                        //             ->title('Updated successfully')
+                                        //             ->success()
+                                        //             ->send();
+                                        //     })
 
 
                                     ])->columnSpan(2),
@@ -184,7 +183,7 @@ class Niche extends Component implements HasForms, HasTable
                                 $i++;
                             }
                             return $arr;
-                        })->hidden(fn($record) => $record->payment_type == 'Installment' ? false : true),
+                        })->hidden(fn($record) => $record->payment_type == 'Installment' && $record->status == 'Occupied' ? false : true),
                     Action::make('approved')
                         ->color(Color::Green)->icon('heroicon-o-check')
 
@@ -192,7 +191,8 @@ class Niche extends Component implements HasForms, HasTable
                             if ($record->payment_method == 'Cash' && $record->status == 'Pending' && $record->payment_type == 'Full') {
                                 $record->update(['status' => 'Occupied', 'total_paid' => $record->price_checkout]);
                             } else {
-                                $record->update(['status' => 'Occupied', 'total_paid' => 10000]);
+                                $paid = (20 / 100) *  (float)$record->price_checkout;
+                                $record->update(['status' => 'Occupied', 'total_paid' => $paid]);
                             }
                             Notification::make()
                                 ->title('Updated successfully')

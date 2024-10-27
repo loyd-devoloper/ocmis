@@ -9,5 +9,5 @@ class NicheInstallment extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['niche_id','customer_id','price','status'];
+    protected $fillable = ['niche_id','customer_id','price','status','date','date_paid'];
 }

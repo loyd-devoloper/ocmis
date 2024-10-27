@@ -29,6 +29,7 @@ return new class extends Migration
             $table->string('payment_type')->nullable();
             $table->string('payment_method')->nullable();
             $table->string('payment_ref')->nullable();
+            $table->string('plan')->nullable();
             $table->text('checkout_url')->nullable();
             $table->text('image')->nullable();
             $table->timestamps();

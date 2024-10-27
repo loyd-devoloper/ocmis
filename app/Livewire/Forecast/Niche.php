@@ -9,7 +9,7 @@ use Phpml\Regression\LeastSquares;
 
 class Niche extends ChartWidget
 {
-    protected static ?string $heading = 'Chart';
+    protected static ?string $heading = 'Forecast';
     public $records = '';
     protected function getData(): array
     {
@@ -52,7 +52,7 @@ class Niche extends ChartWidget
         return [
             'datasets' => [
                 [
-                    'label' => 'Blog posts created',
+                    'label' => 'Forecast',
                     'data' => $datas,
                     'backgroundColor' => [
                         'rgb(255, 99, 132)',

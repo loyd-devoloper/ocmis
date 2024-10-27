@@ -66,13 +66,14 @@
                 </details>
             </li>
             <li>
-                <details  {{ request()->routeIs('admin.forecast.buildings')  ? 'open' : 'close' }}>
+                <details  {{ request()->routeIs('admin.forecast.buildings') || request()->routeIs('admin.forecast.sales') || request()->routeIs('admin.forecast.niches') || request()->routeIs('admin.forecast.view')  ? 'open' : 'close' }}>
                     <summary>Forecast</summary>
                     <ul>
                         <li><a href="{{ route('admin.forecast.buildings') }}"
                             class="{{ request()->routeIs('admin.forecast.buildings') ? 'active' : '' }}">Forecast</a></li>
 
-                        <li><a>Sales</a></li>
+                        <li><a href="{{ route('admin.forecast.sales') }}"
+                            class="{{ request()->routeIs('admin.forecast.sales') ? 'active' : '' }}">Sales</a></li>
 
                     </ul>
                 </details>
@@ -98,7 +99,7 @@
                     <ul tabindex="0"
                         class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
 
-                        <li><a>Settings</a></li>
+                        <li><a href="{{ route('admin.setting') }}">Settings</a></li>
                         <li><a href="{{ route('logout') }}">Logout</a></li>
                     </ul>
                 </div>

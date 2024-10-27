@@ -4,7 +4,7 @@
 
 
 
-        <section class=" w-full" x-data="dropdown(@js($schedules), @entangle('serviceArr'))">
+        <section class=" w-full" x-data="dropdown(@js($schedules), @entangle('serviceArr'), @js((float) $niche?->price))">
             <div class="py-8" wire:ignore>
                 <div class="container mx-auto px-4">
 
@@ -171,63 +171,99 @@
                                    </div> --}}
                             </div>
                         </div>
-                        <form wire:submit="checkout" class="md:w-1/4" wire:ignore>
+                        <form wire:submit="checkout" class="md:w-1/3" wire:ignore>
 
                             <div class="bg-white rounded-lg shadow-md p-6">
                                 <h2 class="text-lg font-semibold mb-4">Summary</h2>
-                                <div >
+                                <div>
                                     <p class="text-xs">PAYMENT TYPE </p>
 
                                     <input type="radio" wire:model="payment_type" x-model="payment_type"
-                                        value="Full" class="radio  radio-xs" /> <span class="text-sm">Full</span>
+                                        value="Full" class="radio  radio-xs" /> <span class="text-sm">Full (<small>10%
+                                            Discount</small>)</span>
+
+
                                     <br>
                                     <input type="radio" wire:model="payment_type" x-model="payment_type"
                                         value="Installment" class="radio  radio-xs" /><span class="text-sm">
                                         Installment</span>
+                                    <div x-show="payment_type == 'Installment'" class="container mx-auto p-4">
+                                        <h1>Plan</h1>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                                            <!-- 12 Months Plan Card -->
+                                            <label for="12months" class="bg-white shadow-lg rounded-lg p-2"
+                                                :class="plan == 12 && 'border border-blue-600'">
+                                                <h2 class="text-sm text-center font-bold mb-2 ">12 Months</h2>
+                                                <h2 class="text-xs text-center mb-4 leading-none"> 0% Interest</h2>
+                                            </label>
+                                            <!-- 24 Months Card -->
+                                            <label for="24months" class="bg-white shadow-lg rounded-lg p-2"
+                                                :class="plan == 24 && 'border border-blue-600'">
+                                                <h2 class="text-sm text-center font-bold mb-2 ">24 Months</h2>
+                                                <h2 class="text-xs text-center mb-4 leading-none"> 10% Interest</h2>
+
+
+                                            </label>
+                                        </div>
+                                        <input type="radio" id="12months" x-model="plan" :value="12"
+                                            class="hidden">
+                                        <input type="radio" id="24months" x-model="plan" :value="24"
+                                            class="hidden">
+                                    </div>
+
                                     <div x-show="payment_type == 'Installment'" x-cloak x-transition>
                                         <hr class="my-2">
 
                                         <label class="form-control w-full max-w-xs">
-                                            <span class="label-text">New Price (price + 2%)</span>
+                                            <span class="label-text">New Price (price + <span
+                                                    x-text="interest"></span>%)</span>
                                             <input type="text" placeholder="Type here"
                                                 class="input input-bordered w-full max-w-xs bg-gray-100"
                                                 :value="finalTotal" readonly />
                                         </label>
                                         <label class="form-control w-full max-w-xs">
-                                            <span class="label-text">Down Payment</span>
+                                            <span class="label-text">Down Payment(20%)</span>
                                             <input type="text" placeholder="Type here"
                                                 class="input input-bordered w-full max-w-xs bg-gray-100"
-                                                value="{{ number_format($downpayment) }}" readonly />
+                                                :value="downpayment" readonly />
                                         </label>
                                         <label class="form-control w-full max-w-xs">
-                                            <span class="label-text">Montly Dues for 3 Months</span>
+                                            <span class="label-text">Montly Dues for <span x-text="plan"></span>
+                                                Months</span>
                                             <input type="text" placeholder="Type here"
                                                 class="input input-bordered w-full max-w-xs bg-gray-100"
                                                 :value="monthly" readonly />
                                         </label>
                                     </div>
                                 </div>
-                                <h1 class="text-xs">PAYMENT METHOD</h1>
+                                <h1 class="text-xs mt-2">PAYMENT METHOD</h1>
                                 <div class="form-control w-fit space-x-2 text-xs">
                                     <label class="label cursor-pointer">
 
-                                        <input type="radio"  wire:model="payment_method" value="Cash"
+                                        <input type="radio" wire:model="payment_method" value="Cash"
                                             class="radio radio-xs mr-1" checked="checked" required />Cash
                                     </label>
                                 </div>
                                 <div class="form-control w-fit space-x-2 text-xs">
                                     <label class="label cursor-pointer">
 
-                                        <input type="radio"  wire:model="payment_method"
-                                            value="Gcash" class="radio radio-xs  mr-1"  required/>Gcash
+                                        <input type="radio" wire:model="payment_method" value="Gcash"
+                                            class="radio radio-xs  mr-1" required />Gcash
                                     </label>
                                 </div>
 
 
                                 <hr class="my-2">
                                 <div class="flex justify-between mb-2">
+                                    <span class="font-semibold">Subtotal</span>
+                                    <span class="font-semibold"
+                                        x-text="payment_type == 'Full' ? subtotal+' - 10% Discount' : downpayment"></span>
+                                </div>
+                                <div class="flex justify-between mb-2">
                                     <span class="font-semibold">Total</span>
-                                    <span class="font-semibold" x-text="payment_type == 'Full' ? subtotal : 10000"></span>
+                                    <span class="font-semibold"
+                                        x-text="payment_type == 'Full' ? finalTotal : downpayment"></span>
                                 </div>
                                 <button type="submit"
                                     class="bg-blue-500 text-white py-2 px-4 rounded-lg mt-4 w-full">Checkout</button>
@@ -371,9 +407,13 @@
 
 @script
     <script>
-        Alpine.data('dropdown', (schedules, serviceArr) => ({
+        Alpine.data('dropdown', (schedules, serviceArr, nichePrice) => ({
             open: false,
+            plan: 12,
+            interest: 0,
+            downpayment: 0,
             payment_type: 'Full',
+            nichePrice: nichePrice,
             my_modal_6: false,
             modalProduct: false,
             schedules: schedules,
@@ -473,19 +513,36 @@
 
             },
             alltotal() {
-                var price = @js((float)$niche?->price);
+                var price = this.nichePrice;
                 var servicePrice = this.serviceArr.deceased_name ? 10000 : 0;
-                console.log(servicePrice)
-                var subtotal = this.productTotal+servicePrice+price;
+                var subtotal = this.productTotal + servicePrice + price;
                 this.subtotal = subtotal;
-                $wire.set('subtotal', subtotal)
-                this.finalTotal = subtotal + (2.5 / 100 * subtotal);
 
-                $wire.set('newPrice', this.finalTotal)
+                $wire.set('payment_type', this.payment_type);
+                $wire.set('subtotal', subtotal);
+                if (this.payment_type == 'Full') {
+                    let discountAmount = (10 / 100) * subtotal; // Calculate discount
 
-                this.monthly = this.finalTotal - servicePrice / 3 ;
-                this.monthly = parseFloat(this.monthly ).toFixed(3);
-                $wire.set('perMonth', this.monthly)
+                    this.finalTotal = subtotal - discountAmount;
+                    $wire.set('newPrice', this.finalTotal);
+                } else {
+
+
+                    this.interest = this.plan == 12 ? 0 : 10;
+
+                    this.finalTotal = subtotal + (this.interest / 100 * subtotal);
+                    this.downpayment = (20 / 100) * this.finalTotal; // Calculate discount
+                    $wire.set('downpayment',this.downpayment);
+                    $wire.set('plan',this.plan);
+                    $wire.set('newPrice', this.finalTotal);
+                    var x = this.finalTotal - this.downpayment;
+                    this.monthly = (x - servicePrice) / parseInt(this.plan);
+
+                    this.monthly = parseFloat(this.monthly).toFixed(3);
+                    $wire.set('perMonth', this.monthly);
+                }
+
+
             },
             changeQuantity(product, type) {
                 if (!!this.productArr[product.id]) {
@@ -538,7 +595,7 @@
 
                 }
 
-
+                var self = this;
                 this.$watch('serviceArr', function(val) {
 
 
@@ -548,6 +605,18 @@
                         localStorage.setItem('service', JSON.stringify(val))
 
                     }
+
+                })
+                this.$watch('payment_type', function(val) {
+
+                    self.alltotal()
+
+
+                })
+                this.$watch('plan', function(val) {
+
+                    self.alltotal()
+
 
                 })
                 this.$watch('productArr', function(val) {

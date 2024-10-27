@@ -57,6 +57,13 @@ class Cart extends Component
             'items'=>json_encode($this->products),
             'total'=>$this->total
        ]);
+       foreach($this->products as $product)
+       {
+           $product['order_id'] = $orders->id;
+           \App\Models\OrderItem::create($product);
+
+       }
+
        if($this->payment_method == 'Gcash')
        {
         $checkout = Paymongo::checkout()->create([

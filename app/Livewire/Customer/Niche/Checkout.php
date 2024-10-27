@@ -15,6 +15,7 @@ class Checkout extends Component
     public $newPrice = 0;
     public $perMonth = 0;
     public $downpayment = 10000;
+    public $plan = 12;
     public $subtotal = 0;
     public $payment_method = 'Cash';
     public $payment_type = 'Full';
@@ -60,6 +61,7 @@ class Checkout extends Component
     }
     public function submit()
     {
+
         $x = \App\Models\Category::where('id', $this->service_id)->first();
         $this->serviceArr = [
             'own_priest' => $this->own_priest,
@@ -111,6 +113,10 @@ class Checkout extends Component
 
     public function checkout()
     {
+
+        //
+
+
         $newProduct = [];
         foreach ($this->productArr as $key => $product) {
             if (!!$product) {
@@ -122,23 +128,31 @@ class Checkout extends Component
             'payment_type' => $this->payment_type,
             'products' => json_encode($newProduct),
             'service' => json_encode($this->serviceArr),
-            'price_checkout' => $this->payment_type == 'Full' ?  $this->subtotal : $this->newPrice,
+            'price_checkout' => $this->newPrice,
             'total_paid' => 0,
             'customer_id' => Auth::id(),
             'status' => 'Pending',
+            'plan' => $this->payment_type == 'Full' ? '' : $this->plan,
         ]);
         if($this->payment_type == 'Installment')
         {
             \App\Models\NicheInstallment::where('niche_id',$this->niche_id)->delete();
-            for($i = 1;$i < 4;$i++)
+            $x = 0;
+            for($i = (int)$this->plan;$i>0;$i--)
             {
+                $x++;
+                $currentDate = Carbon::now();
+
                 \App\Models\NicheInstallment::create([
                     'niche_id'=>$this->niche_id,
                     'customer_id' => Auth::id(),
                     'price'=>$this->perMonth,
                     'status'=>\App\Enums\StatusEnum::NotPaid->value,
+                    'date'=>$currentDate->addMonths($x)->format('Y-m-d'),
                 ]);
+
             }
+
         }
         if ($this->payment_method == 'Gcash') {
             $level = $this->niche?->level;
@@ -176,7 +190,7 @@ class Checkout extends Component
             ->title('Submitted successfully')
             ->success()
             ->send();
-            return $this->redirect(route('my_transaction'));
+            return $this->redirect(route('my_niche'));
         }
     }
     public function render()

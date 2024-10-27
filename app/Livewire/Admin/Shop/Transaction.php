@@ -57,6 +57,7 @@ class Transaction extends Component implements HasForms, HasTable
                     ->color(Color::Green)->icon('heroicon-o-check')
                     ->hidden(fn($record) => $record->payment_method == 'Cash' ? false : true)
                     ->action(function ($record) {
+                        \App\Models\OrderItem::where('order_id',$record->id)->update(['status'=>\App\Enums\StatusEnum::Paid->value]);
                         $record->update(['status' => \App\Enums\StatusEnum::Paid->value]);
                         Notification::make()
                             ->title('Updated successfully')
@@ -73,6 +74,7 @@ class Transaction extends Component implements HasForms, HasTable
                                 'quantity' => (int)$product->quantity + (int)$item->quantity
                             ]);
                         }
+                        \App\Models\OrderItem::where('order_id',$record->id)->update(['status'=>\App\Enums\StatusEnum::Cancelled->value]);
                         $record->update(['status' => \App\Enums\StatusEnum::Cancelled->value]);
                         Notification::make()
                             ->title('Updated successfully')

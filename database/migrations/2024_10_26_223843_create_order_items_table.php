@@ -6,19 +6,22 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('niche_installments', function (Blueprint $table) {
+        Schema::create('order_items', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('niche_id');
-            $table->unsignedBigInteger('customer_id');
-            $table->string('status');
+            $table->string('name');
             $table->string('price');
-            $table->string('date')->nullable();
-            $table->string('date_paid')->nullable();
+            $table->string('amount');
+            $table->string('user_id');
+            $table->string('quantity');
+            $table->string('status')->default('Not Paid');
+            $table->unsignedBigInteger('product_id');
+            $table->unsignedBigInteger('order_id');
             $table->timestamps();
         });
     }
@@ -28,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('niche_installments');
+        Schema::dropIfExists('order_items');
     }
 };

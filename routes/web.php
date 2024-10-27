@@ -46,6 +46,8 @@ Route::get('/register',\App\Livewire\Auth\Register::class)->name('register');
 Route::middleware(['customer.only'])->group(function () {
     Route::get('/cart',\App\Livewire\Customer\Cart::class)->name('cart');
 
+    Route::get('setting',\App\Livewire\Customer\Setting::class)->name('customer.setting');
+
     Route::get('/MyTransaction',\App\Livewire\Customer\MyTransaction::class)->name('my_transaction');
     Route::get('/MyProduct',\App\Livewire\Customer\MyProduct::class)->name('my_product');
     Route::get('/MyMemorial',\App\Livewire\Customer\MyMemorial::class)->name('my_memorial');
@@ -62,6 +64,9 @@ Route::get('/logout',function(Request $request){
 })->name('logout');
 
 Route::middleware('admin.only')->prefix('admin')->group(function () {
+
+    Route::get('setting',\App\Livewire\Admin\Setting::class)->name('admin.setting');
+
     Route::get('users',\App\Livewire\Admin\Users::class)->name('admin.users');
     Route::get('niches/Building',\App\Livewire\Admin\Niches\Building::class)->name('admin.niches.building');
     Route::get('niches/niche',\App\Livewire\Admin\Niches\Niche::class)->name('admin.niches.niche');
@@ -81,6 +86,15 @@ Route::middleware('admin.only')->prefix('admin')->group(function () {
     Route::get('Shop/Sales',\App\Livewire\Admin\ShopSales::class)->name('admin.shop.sales');
 
     Route::get('Forecast/Buildings',\App\Livewire\Admin\Forecast\Index::class)->name('admin.forecast.buildings');
+    Route::get('Forecast/Sales',\App\Livewire\Admin\Forecast\sales::class)->name('admin.forecast.sales');
     Route::get('Forecast/Niches/{building_id}',\App\Livewire\Admin\Forecast\Niche::class)->name('admin.forecast.niches');
     Route::get('Forecast/Niche/{niche_id}',\App\Livewire\Admin\Forecast\View::class)->name('admin.forecast.view');
+
+    Route::get('Forecast/Sales/Service/{records}',\App\Livewire\Admin\ServicePrintTable::class)->name('admin.forecast.service_print');
+    Route::get('Forecast/Sales/Service',function(){
+        return view('livewire.admin.printService');
+    })->name('admin.forecast.print');
+    Route::get('Forecast/Sales/Shop',function(){
+        return view('livewire.admin.printShop');
+    })->name('admin.forecast.printshop');
 });
