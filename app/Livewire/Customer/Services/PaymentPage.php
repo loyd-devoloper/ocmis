@@ -2,16 +2,22 @@
 
 namespace App\Livewire\Customer\Services;
 
+use Carbon\Carbon;
 use Livewire\Component;
+use Filament\Forms\Form;
 use Livewire\Attributes\Title;
 use Illuminate\Support\Facades\Auth;
 use Luigel\Paymongo\Facades\Paymongo;
+use Filament\Forms\Contracts\HasForms;
+use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Notifications\Actions\Action;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Concerns\InteractsWithForms;
 
-class PaymentPage extends Component
+class PaymentPage extends Component implements HasForms
 {
-
+    use InteractsWithForms;
     public $service = [];
     public $schedules = [];
     public $priests = [];
@@ -24,16 +30,30 @@ class PaymentPage extends Component
     public $schedule;
     public $service_id;
     public $payment_method = 'Cash';
+
+
+
+    public function form(Form $form): Form
+    {
+        return $form
+            ->schema([
+                DateTimePicker::make('date_time') ->minDate(Carbon::now()->addDay(3))->required()->statePath('date')->label(false)->nullable(),
+
+                // ...
+            ])
+            ;
+    }
     public function mount($service_id)
     {
         $this->service_id = $service_id;
         $x = \App\Models\Category::where('id', $service_id)->first();
         $this->service = $x;
-        $this->schedules = \App\Models\PriestSchedule::where('status', 0)->get();
+        $this->schedules = \App\Models\PriestSchedule::where('status', 0)->whereDate('date','>', Carbon::now())->get();
         $this->priests = \App\Models\Priest::where('status', 'Active')->get();
     }
     public function submit()
     {
+
         $createservice = \App\Models\UserService::create([
             'own_priest' => $this->own_priest,
             'service_id' => $this->service_id,
@@ -50,6 +70,7 @@ class PaymentPage extends Component
                 'date' => $this->date,
             ]);
         } else {
+            \App\Models\PriestSchedule::where('id',$this->schedule)->update(['status'=>1]);
             $createservice->update([
                 'schedule_id' => $this->schedule,
                 'priest_id' => $this->priest_id,

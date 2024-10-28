@@ -36,7 +36,8 @@
                   </div>
                   <div x-show="own_priest" class="mb-3">
                     <label>Schedule: </label>
-                    <input type="datetime-local" wire:model="date" class="form-control"  :required="own_priest == true ? true : false">
+                    {{ $this->form }}
+                    {{-- <input type="datetime-local" wire:model="date" class="form-control" min="2024-10-29"  :required="own_priest == true ? true : false"> --}}
                 </div>
 
                 <div x-show="own_priest == false" class="mb-3" id="priestDropdown">

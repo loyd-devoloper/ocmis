@@ -37,17 +37,19 @@
                     <div>
                         <label for="modalProduct" class="btn" class="flex items-center">
 
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                stroke="currentColor" class="size-5 text-blue-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5" stroke="currentColor" class="size-5 text-blue-500">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                             </svg>
                             Add Product
                         </label>
                         <label for="items" class="btn" class="flex items-center">
 
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 text-blue-500">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-                              </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5" stroke="currentColor" class="size-5 text-blue-500">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+                            </svg>
 
 
                         </label>
@@ -83,7 +85,7 @@
                     </div>
                 </div> --}}
                 <a class="btn btn-primary btn-md" type="button"
-                    href="{{ route('niches.payment.checkout', ['niche_id' => $niche_id]) }}">Submit</a>
+                    href="{{ route('niches.payment.checkout', ['niche_id' => $niche_id]) }}">Proceed to checkout </a>
             </form>
 
 
@@ -126,8 +128,7 @@
                             </div>
                             <div x-show="service.own_priest" class="mb-3">
                                 <label>Schedule: </label>
-                                <input type="datetime-local" x-model="service.date" class="form-control"
-                                    :required="service.own_priest == true ? true : false">
+                                {{ $this->form }}
                             </div>
 
                             <div x-show="service.own_priest == false" class="mb-3" id="priestDropdown">
@@ -237,8 +238,8 @@
 
 
                                     <tr x-show="!!product">
-                                        <td class="py-4 px-6 border-b border-gray-200"
-                                            x-text="product?.product_name">John Doe</td>
+                                        <td class="py-4 px-6 border-b border-gray-200" x-text="product?.product_name">
+                                            John Doe</td>
                                         {{-- <td class="py-4 px-6 border-b border-gray-200 truncate"
                                             x-text="product?.quantitys">johndoe@gmail.com</td> --}}
                                         <td class="py-4 px-6 border-b border-gray-200 truncate">
@@ -247,14 +248,13 @@
                                                 <button x-on:click="changeQuantity(product,'minus')"
                                                     :disabled="product?.quantitys < 2"
                                                     class="border rounded-md py-2 px-4 mr-2">-</button>
-                                                <span class="text-center w-8"
-                                                    x-text="product?.quantitys"></span>
+                                                <span class="text-center w-8" x-text="product?.quantitys"></span>
                                                 <button x-on:click="changeQuantity(product,'plus')"
                                                     class="border rounded-md py-2 px-4 ml-2">+</button>
                                             </div>
                                         </td>
-                                        <td class="py-4 px-6 border-b border-gray-200"
-                                            x-text="product?.price">555-555-5555</td>
+                                        <td class="py-4 px-6 border-b border-gray-200" x-text="product?.price">
+                                            555-555-5555</td>
                                         <td class="py-4 px-6 border-b border-gray-200">
                                             <x-filament::icon-button icon="heroicon-m-trash" color="danger"
                                                 x-on:click="removeProduct(product)" label="New label" />
@@ -318,17 +318,15 @@
 
                 return `${date} -- ${this.changeTIme(start)} TO ${this.changeTIme(end)}`;
             },
-             removeProduct(product) {
+            removeProduct(product) {
 
 
-                var x =  this.productArr.map((val,key) =>  {
-                    if(!!val)
-                    {
-                       if(val.id !== product.id)
-                       {
+                var x = this.productArr.map((val, key) => {
+                    if (!!val) {
+                        if (val.id !== product.id) {
 
-                        return this.productArr[key] = val;
-                       }
+                            return this.productArr[key] = val;
+                        }
                     }
                     // return val?.id !== product.id;
                 });
@@ -336,7 +334,7 @@
                 console.log(x)
                 var self = this;
                 this.productTotal = 0;
-                 this.productArr.filter((val,key) => {
+                this.productArr.filter((val, key) => {
 
                     if (!!val) {
                         self.productTotal += parseInt(val.quantitys) * parseInt(val.price);
@@ -391,7 +389,7 @@
                 this.my_modal_6 = !this.my_modal_6
                 this.serviceArr = this.service;
 
-                localStorage.setItem('service', JSON.stringify( this.serviceArr ))
+                localStorage.setItem('service', JSON.stringify(this.serviceArr))
             },
             changeQuantity(product, type) {
 

@@ -40,7 +40,7 @@ class Transaction extends Component implements HasForms, HasTable
                     'Cancelled' => 'danger',
                     'Not Paid' => 'warning',
                     default => '', // Default color if no match
-                })->badge(),
+                })->badge()->searchable(),
                 TextColumn::make('created_at'),
             ])
             ->filters([

@@ -36,7 +36,7 @@ class Memorial extends Component implements HasActions, HasForms
             ->form([
                 TextInput::make('deceased_name')->required(),
                 Textarea::make('message')->required(),
-                DateTimePicker::make('date_time'),
+                DateTimePicker::make('date_time') ->minDate(Carbon::now()->addDay(3)),
                 Radio::make('payment_method')
                     ->options([
                         'Cash' => 'Cash',
@@ -129,7 +129,12 @@ class Memorial extends Component implements HasActions, HasForms
     #[Title('Memorial')]
     public function render()
     {
-        $memorials =   \App\Models\Memorial::where('user_id', Auth::id())->get();
+       if(Auth::check())
+       {
+        $memorials = \App\Models\Memorial::where('user_id',Auth::id())->orWhere('status',\App\Enums\StatusEnum::Paid->value)->get();
+       }else{
+        $memorials = \App\Models\Memorial::where('status',\App\Enums\StatusEnum::Paid->value)->get();
+       }
         return view('livewire.customer.memorial', compact('memorials'));
     }
 }

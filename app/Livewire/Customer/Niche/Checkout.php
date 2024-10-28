@@ -193,6 +193,12 @@ class Checkout extends Component
             return $this->redirect(route('my_niche'));
         }
     }
+
+    public function servicePrice($service_id)
+    {
+       $price = \App\Models\Category::where('id',$service_id)->first();
+       return $price->price;
+    }
     public function render()
     {
         $aLLServices = \App\Models\Category::get();

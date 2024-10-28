@@ -33,9 +33,10 @@ jobs:
         script: |
           cd domains/ocmis.online/public_html/
           # cp .env.example .env
-          composer2 update
+          # composer2 update
           # php artisan storage:link
           # php artisan key:generate
-          php artisan migrate:fresh --seed
+          # php artisan migrate:fresh --seed
+          php artisan migrate
           php artisan optimize
           php artisan config:clear

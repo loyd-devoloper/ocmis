@@ -83,8 +83,8 @@
                                 </div>
                                 <div x-show="serviceArr?.deceased_name" x-cloak class="pt-2">
                                     <hr class=" content-black">
-                                    <p class="float-right">Total:
-                                        {{ number_format(10000) }}
+                                    <p class="float-right" x-text="'Total: '+sevice.servicePrice">
+
                                     </p>
                                 </div>
                                 {{-- <div class="pt-2">
@@ -425,8 +425,10 @@
             service: {
                 service: '',
                 message: 'ss',
-                deceased_name: ''
+                deceased_name: '',
+                servicePrice:0
             },
+            servicePrice:0,
             serviceArr: [],
             productArr: [],
             productTotal: 0,
@@ -512,10 +514,20 @@
             submit() {
 
             },
-            alltotal() {
+            async alltotal() {
                 var price = this.nichePrice;
-                var servicePrice = this.serviceArr.deceased_name ? 10000 : 0;
-                var subtotal = this.productTotal + servicePrice + price;
+                try {
+                    var servicePrice = await (this.serviceArr.deceased_name ? $wire.servicePrice(this
+                        .serviceArr.service_id) : 0);
+                    console.log(servicePrice);
+                } catch (error) {
+                    console.error('Error fetching service price:', error);
+                }
+                this.service.servicePrice = servicePrice;
+                // var servicePrice = await this.serviceArr.deceased_name ? $wire.servicePrice(this.serviceArr
+                //     .service_id) : 0;
+                // console.log(servicePrice)
+                var subtotal = this.productTotal + parseInt(servicePrice) + price;
                 this.subtotal = subtotal;
 
                 $wire.set('payment_type', this.payment_type);
@@ -524,6 +536,7 @@
                     let discountAmount = (10 / 100) * subtotal; // Calculate discount
 
                     this.finalTotal = subtotal - discountAmount;
+
                     $wire.set('newPrice', this.finalTotal);
                 } else {
 
@@ -531,12 +544,14 @@
                     this.interest = this.plan == 12 ? 0 : 10;
 
                     this.finalTotal = subtotal + (this.interest / 100 * subtotal);
+
                     this.downpayment = (20 / 100) * this.finalTotal; // Calculate discount
-                    $wire.set('downpayment',this.downpayment);
-                    $wire.set('plan',this.plan);
+                    this.downpayment = parseFloat(this.downpayment).toFixed(2); // Calculate discount
+                    $wire.set('downpayment', this.downpayment);
+                    $wire.set('plan', this.plan);
                     $wire.set('newPrice', this.finalTotal);
                     var x = this.finalTotal - this.downpayment;
-                    this.monthly = (x - servicePrice) / parseInt(this.plan);
+                    this.monthly = (x - parseInt(servicePrice)) / parseInt(this.plan);
 
                     this.monthly = parseFloat(this.monthly).toFixed(3);
                     $wire.set('perMonth', this.monthly);

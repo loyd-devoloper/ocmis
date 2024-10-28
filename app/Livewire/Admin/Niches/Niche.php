@@ -107,8 +107,8 @@ class Niche extends Component implements HasForms, HasTable
                 TextColumn::make('niche_number'),
                 TextColumn::make('capacity'),
 
-                TextColumn::make('status'),
-                TextColumn::make('customerInfo.username'),
+                TextColumn::make('status')->searchable(),
+                TextColumn::make('customerInfo.username')->searchable(['username']),
                 TextColumn::make('level'),
                 TextColumn::make('payment_method'),
                 TextColumn::make('payment_type'),
