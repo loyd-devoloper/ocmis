@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Shop;
 
+use Carbon\Carbon;
 use Filament\Tables;
 use Livewire\Component;
 use App\Models\ShopOrder;
@@ -9,6 +10,7 @@ use Filament\Tables\Table;
 use Filament\Support\Colors\Color;
 use Filament\Tables\Actions\Action;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Mail;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
@@ -57,8 +59,9 @@ class Transaction extends Component implements HasForms, HasTable
                     ->color(Color::Green)->icon('heroicon-o-check')
                     ->hidden(fn($record) => $record->payment_method == 'Cash' ? false : true)
                     ->action(function ($record) {
-                        \App\Models\OrderItem::where('order_id',$record->id)->update(['status'=>\App\Enums\StatusEnum::Paid->value]);
+                        \App\Models\OrderItem::where('order_id', $record->id)->update(['status' => \App\Enums\StatusEnum::Paid->value]);
                         $record->update(['status' => \App\Enums\StatusEnum::Paid->value]);
+                        Mail::to($record->userInfo?->email)->send(new \App\Mail\SuccessPayment($record->userInfo?->username, 'Cash', $record->total, $record->id, Carbon::now()));
                         Notification::make()
                             ->title('Updated successfully')
                             ->success()
@@ -74,7 +77,7 @@ class Transaction extends Component implements HasForms, HasTable
                                 'quantity' => (int)$product->quantity + (int)$item->quantity
                             ]);
                         }
-                        \App\Models\OrderItem::where('order_id',$record->id)->update(['status'=>\App\Enums\StatusEnum::Cancelled->value]);
+                        \App\Models\OrderItem::where('order_id', $record->id)->update(['status' => \App\Enums\StatusEnum::Cancelled->value]);
                         $record->update(['status' => \App\Enums\StatusEnum::Cancelled->value]);
                         Notification::make()
                             ->title('Updated successfully')

@@ -60,13 +60,9 @@ class Transaction extends Component implements HasForms, HasTable
 
                     ->color(Color::Green)
                     ->modalWidth(MaxWidth::Medium)
-
                     ->form([
-
                         Select::make('status')
                             ->options(\App\Enums\StatusEnum::class),
-
-
                     ])
                     ->action(function ($data,$record) {
                        $record->update($data);

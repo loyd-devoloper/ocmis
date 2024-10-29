@@ -18,7 +18,7 @@
             </div>
             <div class="bg-gray-300 p-4 border border-gray-400 grid grid-cols-5">
                 @foreach ($building?->niches as $niche)
-                    @if ($niche->customer_id == null && $niche->status == 'Available')
+                    @if ($niche->status == 'Available')
                         @if (Auth::check())
                         <a href="{{ route('niches.payment', ['niche_id' => $niche->id]) }}"
                             class="bg-[#4a4a4a] border-8 border-[#8b5e3c] p-6 text-center text-green-500 ">

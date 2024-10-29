@@ -23,7 +23,7 @@
                 @enderror
              </label>
             <div class="flex justify-end">
-             <a href=""class="link link-primary">Forget Password?</a>
+             {{-- <a href=""class="link link-primary">Forget Password?</a> --}}
             </div>
              <button type="submit" class="btn btn-primary w-full mt-4">Login</button>
              <p class="text-center pt-8">Don't have an account? <a href="{{ route('register') }}" class="link link-primary link-hover ">Sign Up</a></p>

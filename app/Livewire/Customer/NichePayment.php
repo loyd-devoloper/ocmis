@@ -68,6 +68,25 @@ class NichePayment extends Component implements HasForms
 
 
     }
+    public function changeQuantitys($type,$ShopProduct)
+    {
+        $x = \App\Models\ShopProduct::where('id',$ShopProduct)->first();
+
+
+         $x->update([
+             'quantity'=> $type == 'plus' ? (int)$x?->quantity - 1 : (int)$x?->quantity + 1
+          ]);
+
+
+    }
+    public function changeQuantity($id)
+    {
+        $first =  \App\Models\ShopProduct::where('id',$id)->first();
+        $first->update([
+            'quantity' => (int)$first->quantity - 1
+        ]);
+
+    }
     public function form(Form $form): Form
     {
         return $form

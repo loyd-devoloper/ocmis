@@ -12,6 +12,8 @@ use Illuminate\Support\HtmlString;
 use Filament\Forms\Components\Grid;
 use Filament\Tables\Actions\Action;
 use Filament\Support\Enums\MaxWidth;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Tables\Actions\EditAction;
@@ -131,7 +133,7 @@ class Niche extends Component implements HasForms, HasTable
                             $arr = [];
                             $i = 1;
                             foreach ($record?->installments as $installment) {
-                                $label = Carbon::parse($installment->date)->format('F d, Y')."($installment->price)";
+                                $label = Carbon::parse($installment->date)->format('F d, Y') . "($installment->price)";
 
                                 $arr[] =    Grid::make(5)->schema([
                                     Placeholder::make('dsasdad')->columnSpan(
@@ -190,9 +192,12 @@ class Niche extends Component implements HasForms, HasTable
                         ->action(function ($record) {
                             if ($record->payment_method == 'Cash' && $record->status == 'Pending' && $record->payment_type == 'Full') {
                                 $record->update(['status' => 'Occupied', 'total_paid' => $record->price_checkout]);
+                                Mail::to($record->customerInfo?->email)->send(new \App\Mail\SuccessPayment($record->customerInfo?->username, 'Cash', $record->total_paid, $record->id, Carbon::now()));
                             } else {
                                 $paid = (20 / 100) *  (float)$record->price_checkout;
                                 $record->update(['status' => 'Occupied', 'total_paid' => $paid]);
+                                $record->update(['status' => 'Occupied', 'total_paid' => $record->price_checkout]);
+                                Mail::to($record->customerInfo?->email)->send(new \App\Mail\SuccessPayment($record->customerInfo?->username, 'Cash', $record->total_paid, $record->id, Carbon::now()));
                             }
                             Notification::make()
                                 ->title('Updated successfully')

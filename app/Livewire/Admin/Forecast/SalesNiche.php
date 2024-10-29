@@ -21,9 +21,10 @@ use Filament\Tables\Columns\TextColumn;
 
 use Filament\Tables\Contracts\HasTable;
 
+use Filament\Tables\Columns\ImageColumn;
 use Illuminate\Support\Facades\Redirect;
-use Filament\Forms\Components\DatePicker;
 
+use Filament\Forms\Components\DatePicker;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Tables\Concerns\InteractsWithTable;
@@ -36,16 +37,26 @@ class SalesNiche extends Component implements HasForms, HasTable
     public function table(Table $table): Table
     {
         return $table
-            ->query(OrderItem::query()->where('status', \App\Enums\StatusEnum::Paid->value))
+            ->query(Niche::query()->where('status', 'Occupied'))
             ->heading('SALES BY NiCHE')
             ->deferFilters()
             ->columns([
-                TextColumn::make('id')->label('ID'),
-                TextColumn::make('name')->label('Product Name'),
-                TextColumn::make('price'),
-                TextColumn::make('quantity'),
-                TextColumn::make('created_at')->label('Date')->formatStateUsing(fn($state) => Carbon::parse($state)->format('F d, Y')),
-                TextColumn::make('status'),
+                TextColumn::make('id')->searchable(),
+
+                TextColumn::make('buildingInfo.name')->label('Buinding Name')->searchable(),
+                TextColumn::make('niche_number'),
+                TextColumn::make('capacity'),
+
+                TextColumn::make('status')->searchable(),
+                TextColumn::make('customerInfo.username')->searchable(['username']),
+                TextColumn::make('level'),
+                TextColumn::make('payment_method'),
+                TextColumn::make('payment_type'),
+                TextColumn::make('plan')->formatStateUsing(fn($state) => "$state Months"),
+
+                TextColumn::make('price')->label('Niche Price'),
+                TextColumn::make('price_checkout')->label('Total'),
+                TextColumn::make('total_paid')->label('Total Paid'),
             ])
             ->filters([
                 Filter::make('created_at')
@@ -75,7 +86,7 @@ class SalesNiche extends Component implements HasForms, HasTable
 
                 ->action(function ($records) {
 
-                    return Redirect::away(route('admin.forecast.printshop'))->with('records',$records);
+                    return Redirect::away(route('admin.forecast.printNiche'))->with('records',$records);
                 })
                 ,
 
@@ -83,7 +94,7 @@ class SalesNiche extends Component implements HasForms, HasTable
                     ->label('CSV')
                     ->action(function ($records) {
                         // Create a new export instance and pass the selected records
-                        return Excel::download(new \App\Exports\shopExport($records->toArray()), 'SALES BY SHOP.csv', \Maatwebsite\Excel\Excel::CSV, [
+                        return Excel::download(new \App\Exports\NicheExport($records->toArray()), 'SALES BY NICHE.csv', \Maatwebsite\Excel\Excel::CSV, [
                             'Content-Type' => 'text/csv',
                         ]);
                     }),
@@ -91,7 +102,7 @@ class SalesNiche extends Component implements HasForms, HasTable
                     ->label('EXCEL')
                     ->action(function ($records) {
                         // Create a new export instance and pass the selected records
-                        return Excel::download(new \App\Exports\shopExport($records->toArray()), 'SALES BY SHOP.xlsx');
+                        return Excel::download(new \App\Exports\NicheExport($records->toArray()), 'SALES BY NICHE.xlsx');
                     }),
 
             ]);

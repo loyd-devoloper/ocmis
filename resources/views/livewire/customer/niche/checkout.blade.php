@@ -10,7 +10,7 @@
 
                     <div class="flex flex-col md:flex-row gap-4">
                         <div class="md:w-3/4 grid grid-cols-1 lg:grid-cols-2 gap-10">
-                            <div class="bg-white rounded-lg shadow-md px-6 pb-6 pt-2 mb-4">
+                            <div class="bg-white h-fit  rounded-lg shadow-md px-6 pb-6 pt-2 mb-4">
                                 <h1 class="text-2xl font-semibold mb-4">Niche</h1>
                                 <div class="flex gap-10">
                                     <img src="{{ asset('storage/' . $niche->image) }}"
@@ -41,7 +41,7 @@
                                 </div>
                             </div>
                             {{-- service --}}
-                            <div class="bg-white rounded-lg shadow-md px-6 pb-6 pt-2 mb-4">
+                            <div class="bg-white h-fit rounded-lg shadow-md px-6 pb-6 pt-2 mb-4">
                                 <h1 class="text-2xl font-semibold mb-4">Services</h1>
                                 {{-- <label x-show="serviceArr.length == 0" for="my_modal_6" class="btn"
                                     class="flex items-center">
@@ -83,7 +83,7 @@
                                 </div>
                                 <div x-show="serviceArr?.deceased_name" x-cloak class="pt-2">
                                     <hr class=" content-black">
-                                    <p class="float-right" x-text="'Total: '+sevice.servicePrice">
+                                    <p class="float-right" x-text="'Total: '+service.servicePrice">
 
                                     </p>
                                 </div>
@@ -524,6 +524,8 @@
                     console.error('Error fetching service price:', error);
                 }
                 this.service.servicePrice = servicePrice;
+
+                $wire.set('service_price', this.service.servicePrice);
                 // var servicePrice = await this.serviceArr.deceased_name ? $wire.servicePrice(this.serviceArr
                 //     .service_id) : 0;
                 // console.log(servicePrice)
@@ -562,7 +564,7 @@
             changeQuantity(product, type) {
                 if (!!this.productArr[product.id]) {
 
-
+                    $wire.changeQuantitys(type,product.id);
                     if (type == 'minus') {
                         var x = this.productArr[product.id];
                         this.productArr[product.id]['quantitys'] = x.quantitys - 1;

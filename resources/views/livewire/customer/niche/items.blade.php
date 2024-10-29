@@ -62,7 +62,7 @@
 
 
             </td>
-            <td class="py-4 px-6 border-b border-gray-200">₱10000</td>
+            <td class="py-4 px-6 border-b border-gray-200">₱{{ json_decode($getRecord()->service)?->price }}</td>
 
         </tr>
           @endif

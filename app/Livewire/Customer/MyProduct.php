@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Customer;
 
+use Carbon\Carbon;
 use Filament\Tables;
 use Livewire\Component;
 use App\Models\ShopOrder;
@@ -11,6 +12,7 @@ use Filament\Tables\Actions\Action;
 use Illuminate\Contracts\View\View;
 use Filament\Support\Enums\MaxWidth;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Luigel\Paymongo\Facades\Paymongo;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Tables\Actions\ViewAction;
@@ -36,6 +38,7 @@ class MyProduct extends Component implements HasForms, HasTable
                 $order->update([
                     'status' => !!$checkout->getData()['payments'] ? \App\Enums\StatusEnum::Paid->value : \App\Enums\StatusEnum::NotPaid->value
                 ]);
+                Mail::to(Auth::user()->email)->send(new \App\Mail\SuccessPayment(Auth::user()->username,'Gcash',$order->total,$order->id,Carbon::parse($checkout->getData()['paid_at'])));
             }
         }
     }

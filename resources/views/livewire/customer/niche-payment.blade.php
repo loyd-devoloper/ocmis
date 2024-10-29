@@ -168,7 +168,7 @@
             </div>
 
             <input type="checkbox" id="modalProduct" x-model="modalProduct" class="modal-toggle" />
-            <div x-ref="modal" class="modal  " wire:ignore>
+            <div x-ref="modal" class="modal  " >
 
                 <form x-cloak wire:submit="submit" class="w-11/12 max-w-6xl modal-box">
 
@@ -247,9 +247,11 @@
 
                                                 <button x-on:click="changeQuantity(product,'minus')"
                                                     :disabled="product?.quantitys < 2"
+
                                                     class="border rounded-md py-2 px-4 mr-2">-</button>
                                                 <span class="text-center w-8" x-text="product?.quantitys"></span>
                                                 <button x-on:click="changeQuantity(product,'plus')"
+
                                                     class="border rounded-md py-2 px-4 ml-2">+</button>
                                             </div>
                                         </td>
@@ -343,7 +345,7 @@
                 })
             },
             addProduct(product) {
-
+                $wire.changeQuantity(product.id);
 
                 if (!!this.productArr[product.id]) {
 
@@ -393,10 +395,10 @@
             },
             changeQuantity(product, type) {
 
-                console.log(product)
+
                 if (!!this.productArr[product.id]) {
 
-
+                    $wire.changeQuantitys(type,product.id);
                     if (type == 'minus') {
                         var x = this.productArr[product.id];
                         this.productArr[product.id]['quantitys'] = x.quantitys - 1;

@@ -19,7 +19,8 @@
                     <li><a href="{{ route('memorial') }}"
                         class="{{ request()->routeIs('memorial') ? 'font-bold' : '' }}">Memorials</a></li>
 
-                    <li><a>About Us</a></li>
+                    <li><a href="{{ route('about') }}"
+                        class="{{ request()->routeIs('about') ? 'font-bold' : '' }}">About Us</a></li>
                 </ul>
             </div>
             <div class="navbar-end">

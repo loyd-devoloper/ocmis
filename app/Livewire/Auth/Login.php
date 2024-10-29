@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Auth;
 
+use App\Models\User;
 use Livewire\Component;
 use Livewire\Attributes\Title;
 use Illuminate\Support\Facades\Auth;
@@ -15,23 +16,30 @@ class Login extends Component
     public function login()
     {
         $validate = $this->validate([
-            "username"=> ["required"],
-            "password"=> ["required"],
+            "username" => ["required"],
+            "password" => ["required"],
         ]);
-        if(Auth::attempt($validate))
-        {
-            if(Auth::user()->role == 'admin')
-            {
+        if (Auth::attempt($validate)) {
+            if (Auth::user()->role == 'admin') {
                 $this->redirectRoute('admin.users');
-            }else{
-                $this->redirectRoute('home');
-            }
+            } else {
 
-        }else{
+                if (!!Auth::user()->email_verified_at) {
+                  return redirect()->route('home');
+
+                }
+                Auth::logout();
+                Notification::make()
+                    ->title('Your email is not verified.')
+                    ->danger()
+                    ->persistent()
+                    ->send();
+            }
+        } else {
             Notification::make()
-            ->title( 'Wrong Credential')
-            ->danger()
-            ->send();
+                ->title('Wrong Credential')
+                ->danger()
+                ->send();
         }
     }
     #[Title("Login")]

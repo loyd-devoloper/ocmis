@@ -33,6 +33,7 @@ class Checkout extends Component
     public $deceasedname;
     public $schedule;
     public $service_id;
+    public $service_price = 0;
 
     public $serviceArr = [];
     public $productArr = [];
@@ -116,7 +117,10 @@ class Checkout extends Component
 
         //
 
-
+       if(count($this->serviceArr))
+       {
+        $this->serviceArr['price'] = (float)$this->service_price;
+       }
         $newProduct = [];
         foreach ($this->productArr as $key => $product) {
             if (!!$product) {
@@ -166,13 +170,13 @@ class Checkout extends Component
                 ],
                 'description' => "Invoice No.: $this->niche_id",
                 'line_items' => [
-                    ['amount' => $this->payment_type == 'Full' ? $this->subtotal * 100 : 10000 * 100,'currency' => 'PHP','name' => "Niche $level - $niche_number", 'quantity' => 1]
+                    ['amount' => $this->payment_type == 'Full' ? $this->subtotal * 100 : (float)$this->downpayment * 100,'currency' => 'PHP','name' => "Niche $level - $niche_number", 'quantity' => 1]
                 ],
                 'payment_method_types' => [
                     'gcash'
 
                 ],
-                'success_url' => route('my_product'),
+                'success_url' => route('my_niche'),
                 'statement_descriptor' => 'OCMIS ONLINE PAYMENT',
                 'metadata' => [
                     'Key' => 'Value'
@@ -193,7 +197,17 @@ class Checkout extends Component
             return $this->redirect(route('my_niche'));
         }
     }
+    public function changeQuantitys($type,$ShopProduct)
+    {
+        $x = \App\Models\ShopProduct::where('id',$ShopProduct)->first();
 
+
+         $x->update([
+             'quantity'=> $type == 'plus' ? (int)$x?->quantity - 1 : (int)$x?->quantity + 1
+          ]);
+          return redirect()->route('niches.payment.checkout', ['niche_id' => $this->niche_id]);
+
+    }
     public function servicePrice($service_id)
     {
        $price = \App\Models\Category::where('id',$service_id)->first();

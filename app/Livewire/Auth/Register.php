@@ -4,6 +4,7 @@ namespace App\Livewire\Auth;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Filament\Notifications\Notification;
 
 class Register extends Component
@@ -33,7 +34,7 @@ class Register extends Component
             'password_confirmation'=>'required',
         ]);
 
-        \App\Models\User::create([
+       $user = \App\Models\User::create([
             'fname'=>$this->fname,
             'lname'=>$this->lname,
             'mname'=>$this->mname,
@@ -44,11 +45,14 @@ class Register extends Component
             'password'=>Hash::make($this->password),
 
         ]);
+        $link = 'http://ocmis-main.test/verified/'.$user->id;
+        Mail::to($this->email)->send(new  \App\Mail\Verification($link));
         Notification::make()
-        ->title( 'Created successfully')
+        ->title( 'Check your email '.$this->email.' for the verification link.')
+        ->persistent()
         ->success()
         ->send();
-        $this->reset();
+        return redirect()->route('login');
     }
     public function render()
     {

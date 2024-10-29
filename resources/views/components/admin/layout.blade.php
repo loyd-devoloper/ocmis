@@ -6,7 +6,7 @@
                     class="{{ request()->routeIs('admin.users') ? 'active' : '' }}">Users</a></li>
             <li>
                 <details
-                    {{ request()->routeIs('admin.niches.building') || request()->routeIs('admin.niches.niche') || request()->routeIs('admin.niches.urn') ? 'open' : 'close' }}>
+                    {{ request()->routeIs('admin.niches.building') || request()->routeIs('admin.niches.niche') || request()->routeIs('admin.niches.urn') || request()->routeIs('admin.niches.sales') ? 'open' : 'close' }}>
                     <summary>Niches</summary>
                     <ul>
                         <li><a href="{{ route('admin.niches.building') }}"
@@ -16,7 +16,8 @@
                                 class="{{ request()->routeIs('admin.niches.niche') ? 'active' : '' }}">Niches</a></li>
                         <li><a href="{{ route('admin.niches.urn') }}"
                                 class="{{ request()->routeIs('admin.niches.urn') ? 'active' : '' }}">Urn</a></li>
-                        <li><a>Sales</a></li>
+                        <li><a href="{{ route('admin.niches.sales') }}"
+                            class="{{ request()->routeIs('admin.niches.sales') ? 'active' : '' }}">Sales</a></li>
 
                     </ul>
                 </details>
