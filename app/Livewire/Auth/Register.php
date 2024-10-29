@@ -45,7 +45,7 @@ class Register extends Component
             'password'=>Hash::make($this->password),
 
         ]);
-        $link = 'http://ocmis-main.test/verified/'.$user->id;
+        $link = 'https://ocmis.online/verified/'.$user->id;
         Mail::to($this->email)->send(new  \App\Mail\Verification($link));
         Notification::make()
         ->title( 'Check your email '.$this->email.' for the verification link.')

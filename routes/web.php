@@ -56,7 +56,7 @@ Route::get('verified/{id}', function ($id) {
 
 
 
-})->name('services.payment.success');
+});
 Route::get('/register', \App\Livewire\Auth\Register::class)->name('register');
 
 Route::middleware(['customer.only'])->group(function () {
