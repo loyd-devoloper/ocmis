@@ -48,14 +48,11 @@ Route::get('verified/{id}', function ($id) {
     $user->markEmailAsVerified();
     Auth::login($user);
     Notification::make()
-    ->title('Verify successfully')
-    ->success()
-    ->persistent()
-    ->send();
+        ->title('Verify successfully')
+        ->success()
+        ->persistent()
+        ->send();
     return redirect()->route('home');
-
-
-
 });
 Route::get('/register', \App\Livewire\Auth\Register::class)->name('register');
 
