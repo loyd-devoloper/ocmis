@@ -43,7 +43,10 @@ class MyNiche extends Component implements HasForms, HasTable
                         'status' => !!$checkout->getData()['payments'] ? 'Occupied' : 'Pending',
                         'total_paid' => !!$checkout->getData()['payments'] ? $order->price_checkout : 0,
                     ]);
-                    Mail::to(Auth::user()->email)->send(new \App\Mail\SuccessPayment(Auth::user()->username,'Gcash',$order->total_paid,$order->id,Carbon::parse($checkout->getData()['paid_at'])));
+                    if(!!$checkout->getData()['payments'])
+                    {
+                        Mail::to(Auth::user()->email)->send(new \App\Mail\SuccessPayment(Auth::user()->username,'Gcash',$order->total_paid,$order->id,Carbon::parse($checkout->getData()['paid_at'])));
+                    }
                 } else {
                     $order->update([
                         'status' => !!$checkout->getData()['payments'] ? 'Occupied' : 'Pending',
@@ -111,7 +114,12 @@ class MyNiche extends Component implements HasForms, HasTable
                     ->color(Color::Red)
                     ->action(function ($record) {
                         $record->update([
-                            'status'=>'Available'
+                            'status'=>'Available',
+                            'plan'=>null,
+                            'price_checkout'=>null,
+                            'total_paid'=>null,
+                            'payment_ref'=>null,
+                            'checkout_url'=>null,
                         ]);
                     })
             ]);

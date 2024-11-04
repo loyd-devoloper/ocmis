@@ -38,7 +38,11 @@ class MyProduct extends Component implements HasForms, HasTable
                 $order->update([
                     'status' => !!$checkout->getData()['payments'] ? \App\Enums\StatusEnum::Paid->value : \App\Enums\StatusEnum::NotPaid->value
                 ]);
+                if(!!$checkout->getData()['payments'])
+                {
                 Mail::to(Auth::user()->email)->send(new \App\Mail\SuccessPayment(Auth::user()->username,'Gcash',$order->total,$order->id,Carbon::parse($checkout->getData()['paid_at'])));
+
+                }
             }
         }
     }

@@ -14,7 +14,7 @@
              </label>
              <label class="form-control w-full">
                  <div class="label">
-                     <span class="label-text">password</span>
+                     <span class="label-text">Password</span>
 
                  </div>
                  <input type="password" wire:model="password"  class="input input-bordered w-full " required />

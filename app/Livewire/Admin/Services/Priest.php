@@ -39,7 +39,7 @@ class Priest extends Component implements HasForms, HasTable
             ->query(\App\Models\Priest::query()->with('schedules'))
             ->headerActions([
                 Action::make('create')
-                    ->label('Add Category')
+                    ->label('Add Priest')
                     ->icon('heroicon-o-plus-circle')
                     ->color(Color::Green)
                     ->modalWidth(MaxWidth::ScreenExtraLarge)

@@ -10,20 +10,23 @@
             <input type="checkbox" id="my_modal_1" x-model="my_modal_1" class="modal-toggle" />
             <div class="modal" role="dialog">
                 <div class="modal-box">
-                    <label class="form-control w-full max-w-xs">
-                        <span class="label-text">Start Time</span>
-                        <input type="time" x-model="start" placeholder="Type here"
-                            class="input input-bordered w-full max-w-xs" />
-                    </label>
-                    <label class="form-control w-full max-w-xs">
-                        <span class="label-text">End Time</span>
-                        <input type="time" x-model="end" placeholder="Type here"
-                            class="input input-bordered w-full max-w-xs" />
-                    </label>
-                    <div class="modal-action">
-                        <button type="button" x-on:click="submitForm">submit</button>
-                        <label for="my_modal_1" class="btn">Close!</label>
-                    </div>
+                    <form>
+                        <label class="form-control w-full max-w-xs">
+                            <span class="label-text">Start Time</span>
+                            <input type="time" x-model="start" placeholder="Type here"
+                                class="input input-bordered w-full max-w-xs" required />
+                        </label>
+                        <label class="form-control w-full max-w-xs">
+                            <span class="label-text">End Time</span>
+                            <input type="time" x-model="end" placeholder="Type here"
+                                class="input input-bordered w-full max-w-xs" required />
+                        </label>
+                        <div class="modal-action">
+                            <button type="button" x-on:click="submitForm">submit</button>
+
+                            <label for="my_modal_1" class="btn">Close!</label>
+                        </div>
+                    </form>
                 </div>
             </div>
 
@@ -48,28 +51,34 @@
                 this.open = !this.open
             },
             submitForm() {
-                var self = this;
-                self.my_modal_1 = false;
-                var x = {
-                    date: self.dates,
-                    start: self.start,
-                    end: self.end,
+                if (!this.start || !this.end) {
+                    alert('Please fill in both start and end times.');
+                    return;
+                } else {
+                    var self = this;
+                    self.my_modal_1 = false;
+                    var x = {
+                        date: self.dates,
+                        start: self.start,
+                        end: self.end,
 
-                };
+                    };
 
 
 
-                this.schedule.push(x)
-                this.available.push({
+                    this.schedule.push(x)
+                    this.available.push({
 
-                    title: 'Available',
-                    display: 'block',
-                    start: self.dates,
-                    backgroundColor: '#2986cc'
-                })
-                this.start = '';
-                this.end = '';
-                this.showCalendar();
+                        title: 'Available',
+                        display: 'block',
+                        start: self.dates,
+                        backgroundColor: '#2986cc'
+                    })
+                    this.start = '';
+                    this.end = '';
+                    this.showCalendar();
+
+                }
 
             },
             changeDate(date) {
@@ -126,7 +135,7 @@
                         );
 
                         const scheduleUpdated = self.schedule.filter(item =>
-                             !(item.date === info.dateStr)
+                            !(item.date === info.dateStr)
                         );
 
                         self.available = updatedScheduleArray;
@@ -155,7 +164,7 @@
                             !(item.start === newDate)
                         );
                         const scheduleUpdated = self.schedule.filter(item =>
-                             !(item.date === newDate)
+                            !(item.date === newDate)
                         );
 
                         self.available = updatedScheduleArray;

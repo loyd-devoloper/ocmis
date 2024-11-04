@@ -26,11 +26,11 @@
                                {{ $info ? "$info->fname $info->lname"  : ' [Firstname ,Lastname]' }}
                             </p>
                             <p class="text-sm mt-1">
-                                {{ $info ? "$info->birthdate"  : ' [Birth Date]' }}
+                                Birthdate: {{ $info ? "$info->birthdate"  : ' [Birth Date]' }}
 
                             </p>
                             <p class="text-sm">
-                                {{ $info ? "$info->deathdate"  : '[Death Date]' }}
+                                Deathdate: {{ $info ? "$info->deathdate"  : '[Death Date]' }}
 
                             </p>
 
@@ -42,7 +42,7 @@
                     </div>
                     <div class="w-2/3 pl-6">
                         <h2 class="text-xl font-semibold mb-4">
-                            In Loving Memory of Jose Rizal
+                            In Loving Memory of {{ $info ? "$info->fname $info->lname" : "[Deceased Name]" }}
                         </h2>
                         <div class="flex items-center mb-4">
                             @if ($info)

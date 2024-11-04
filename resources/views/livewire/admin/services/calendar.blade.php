@@ -50,7 +50,13 @@
                 this.open = !this.open
             },
             submitForm() {
-                var self = this;
+
+                if (!this.start || !this.end) {
+                    alert('Please fill in both start and end times.');
+                    return;
+                } else {
+
+                    var self = this;
                 self.my_modal_1 = false;
                 var x = {
                     date: self.dates,
@@ -59,7 +65,7 @@
 
                 };
 
-                console.log(JSON.stringify(x))
+
 
                 this.schedule.push(x)
                 this.available.push({
@@ -72,6 +78,8 @@
                 this.start = '';
                 this.end = '';
                 this.showCalendar();
+                }
+
 
             },
             changeDate(date) {

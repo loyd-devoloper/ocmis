@@ -21,6 +21,7 @@ class Login extends Component
         ]);
         if (Auth::attempt($validate)) {
             if (Auth::user()->role == 'admin') {
+
                 $this->redirectRoute('admin.users');
             } else {
 
