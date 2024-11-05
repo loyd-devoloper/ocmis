@@ -57,7 +57,7 @@ class Category extends Component implements HasForms, HasTable
                     })
             ])
             ->columns([
-                TextColumn::make('id')->searchable(),
+                // TextColumn::make('id')->searchable(),
 
                 TextColumn::make('name')->searchable(),
 

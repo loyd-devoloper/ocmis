@@ -3,6 +3,10 @@
 
         <div class="p-10">
             <x-filament::tabs label="Content tabs" class="my-2">
+
+            <x-filament::tabs.item tag="a" :href="route('my_niche')">
+                My Niche
+            </x-filament::tabs.item>
                 <x-filament::tabs.item  tag="a" :href="route('my_transaction')">
                     My Service Request
                 </x-filament::tabs.item>
@@ -11,9 +15,6 @@
                     My Product Purchases
                 </x-filament::tabs.item>
 
-                <x-filament::tabs.item tag="a" :href="route('my_niche')">
-                    My Niche
-                </x-filament::tabs.item>
                 <x-filament::tabs.item tag="a" :href="route('my_memorial')">
                     My Memorial
                 </x-filament::tabs.item>

@@ -28,7 +28,7 @@ class Memorial extends Component implements HasForms, HasTable
         return $table
             ->query(\App\Models\Memorial::query()->with('userInfo'))
             ->columns([
-                TextColumn::make('id'),
+                // TextColumn::make('id'),
                 TextColumn::make('userInfo.username')->label('User'),
 
                 TextColumn::make('deceased_name'),

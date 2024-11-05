@@ -64,7 +64,7 @@ class Urn extends Component implements HasForms, HasTable
                     })
             ])
             ->columns([
-                TextColumn::make('id')->searchable(),
+                // TextColumn::make('id')->searchable(),
                 TextColumn::make('Niche')->state(function($record){
                     return $record->nicheInfo?->buildingInfo?->name . " - " . $record->nicheInfo?->level . " - " . $record->nicheInfo?->niche_number;
                 }),

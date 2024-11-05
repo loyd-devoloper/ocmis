@@ -58,7 +58,7 @@ class Seller extends Component implements HasForms, HasTable
                     })
             ])
             ->columns([
-                TextColumn::make('id')->searchable(),
+                // TextColumn::make('id')->searchable(),
 
                 TextColumn::make('name')->searchable(),
                 TextColumn::make('contact')->searchable(),

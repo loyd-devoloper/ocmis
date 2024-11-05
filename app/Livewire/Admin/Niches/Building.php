@@ -49,7 +49,7 @@ class Building extends Component implements HasForms, HasTable
                     })
             ])
             ->columns([
-                TextColumn::make('id')->searchable(),
+                // TextColumn::make('id')->searchable(),
                 TextColumn::make('name')->searchable(),
                 ImageColumn::make('image')->width(100)->height(100)
 

@@ -72,7 +72,7 @@ class Product extends Component implements HasForms, HasTable
                     })
             ])
             ->columns([
-                TextColumn::make('id')->searchable(),
+                // TextColumn::make('id')->searchable(),
                 ImageColumn::make('image')->width(100)->height(100),
                 TextColumn::make('product_name')->searchable(),
                 TextColumn::make('categoryInfo.name')->label('Category'),

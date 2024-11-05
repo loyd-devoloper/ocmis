@@ -6,6 +6,7 @@
         {{-- section --}}
         <main class="container mx-auto p-6">
             <section class="bg-white p-8 rounded shadow-md">
+                <img src="{{ asset('Asset/Picture2.jpg') }}" class="float-right rounded-md" alt="">
                 <h2 class="text-3xl font-bold mb-4">About Us</h2>
                 <p class="mb-4">Welcome to the Online Columbarium Management and Information System (OCMIS)—your modern solution for efficient and compassionate columbarium management.</p>
                 <p class="mb-4">At OCMIS, we understand the importance of honoring and remembering loved ones in a peaceful and organized environment. Our platform provides a seamless and user-friendly system for managing columbarium spaces, allowing families and individuals to reserve, locate, and manage columbarium units with ease.</p>

@@ -103,13 +103,18 @@ class Niche extends Component implements HasForms, HasTable
                     })
             ])
             ->columns([
-                TextColumn::make('id')->searchable(),
+                // TextColumn::make('id')->searchable(),
                 ImageColumn::make('image')->width(50)->height(50),
                 TextColumn::make('buildingInfo.name')->label('Building Name')->searchable(),
                 TextColumn::make('niche_number'),
                 TextColumn::make('capacity'),
 
-                TextColumn::make('status')->searchable(),
+                TextColumn::make('status')->searchable()->color(fn($record) => match ($record->status) {
+                    'Available' => 'success', // Use a predefined color
+                    'Cancelled' => 'danger',
+                    'Pending' => 'warning',
+                    default => '', // Default color if no match
+                })->badge(),
                 TextColumn::make('customerInfo.username')->searchable(['username']),
                 TextColumn::make('level'),
                 TextColumn::make('payment_method'),
