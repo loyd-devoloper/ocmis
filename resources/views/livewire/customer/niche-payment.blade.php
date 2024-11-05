@@ -366,6 +366,16 @@
                 } else {
                     product['quantitys'] = 1;
                     this.productArr[product.id] = product;
+
+                    var self = this;
+                    this.productTotal = 0;
+                    this.productArr.filter((val) => {
+
+                        if (!!val) {
+                            self.productTotal += parseInt(val.quantitys) * parseInt(val.price);
+                        }
+                        return val;
+                    })
                 }
 
             },
@@ -422,7 +432,11 @@
                 }
             },
             init() {
-
+                new FilamentNotification()
+    .title('Saved successfully')
+    .success()
+    .body('Changes to the post have been saved.')
+    .send()
                 if (localStorage.getItem('service') !== null) {
 
                     this.serviceArr = JSON.parse(localStorage.getItem('service'))

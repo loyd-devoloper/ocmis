@@ -99,6 +99,7 @@ class NichePayment extends Component implements HasForms
     }
     public function render()
     {
+
         $aLLServices = \App\Models\Category::get();
         $serviceArray = $this->serviceArr;
         $products = \App\Models\ShopProduct::with('categoryInfo')->get();

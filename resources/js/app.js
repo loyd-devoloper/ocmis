@@ -15,3 +15,6 @@ window.dayGridPlugin = dayGridPlugin;
 window.timeGridPlugin = timeGridPlugin;
 window.listPlugin = listPlugin;
 window.interactionPlugin = interactionPlugin;
+
+
+

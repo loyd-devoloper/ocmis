@@ -14,12 +14,12 @@
                         <label class="form-control w-full max-w-xs">
                             <span class="label-text">Start Time</span>
                             <input type="time" x-model="start" placeholder="Type here"
-                                class="input input-bordered w-full max-w-xs" required />
+                                class="input input-bordered w-full max-w-xs"  />
                         </label>
                         <label class="form-control w-full max-w-xs">
                             <span class="label-text">End Time</span>
                             <input type="time" x-model="end" placeholder="Type here"
-                                class="input input-bordered w-full max-w-xs" required />
+                                class="input input-bordered w-full max-w-xs"  />
                         </label>
                         <div class="modal-action">
                             <button type="button" x-on:click="submitForm">submit</button>
