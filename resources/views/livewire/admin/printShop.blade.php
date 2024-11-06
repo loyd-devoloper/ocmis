@@ -44,6 +44,17 @@
                 </tr>
             @endforeach
         </tbody>
+        <tfoot>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><strong>Total</strong></td>
+
+                <td>{{ session('records')->sum('price') }}</td>
+            </tr>
+        </tfoot>
     </table>
     <script>
         window.onload = function() {

@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('price');
             $table->string('date')->nullable();
             $table->string('date_paid')->nullable();
+            $table->string('payment_ref')->nullable();
+            $table->text('checkout_url')->nullable();
             $table->timestamps();
         });
     }

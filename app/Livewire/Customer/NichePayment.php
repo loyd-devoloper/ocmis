@@ -87,6 +87,24 @@ class NichePayment extends Component implements HasForms
         ]);
 
     }
+    public function serviceName($id)
+    {
+        $first =  \App\Models\Category::where('id',$id)->first();
+        return $first?->name;
+
+    }
+    public function priestSched($id)
+    {
+        $first =  \App\Models\PriestSchedule::where('id',$id)->first();
+        return $first?->date." $first?->start_time";
+
+    }
+    public function priestName($id)
+    {
+        $first =  \App\Models\Priest::where('id',$id)->first();
+        return $first?->name;
+
+    }
     public function form(Form $form): Form
     {
         return $form

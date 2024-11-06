@@ -47,10 +47,10 @@ class View extends Component implements HasActions, HasForms
 
             ->form([
                 TextInput::make('lname')->label('Last name')->required()->default($this->information?->lname),
-                Textarea::make('fname')->label('First Name')->required()->default($this->information?->fname),
+                TextInput::make('fname')->label('First Name')->required()->default($this->information?->fname),
                 DatePicker::make('birthdate')->required()->default($this->information?->birthdate),
                 DatePicker::make('deathdate')->required()->default($this->information?->deathdate),
-                Textarea::make('message')->required()->default($this->information?->lname),
+                Textarea::make('message')->required()->default($this->information?->message),
                 FileUpload::make('image')->image()->required()->default($this->information?->image)
             ])
             ->action(function ($data) {

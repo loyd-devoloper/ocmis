@@ -70,13 +70,13 @@
                                         <p><span class="font-bold">Own Priest: </span> <span
                                                 x-text="serviceArr?.own_priest ? 'Yes' : 'No'"></span></p>
                                         <p x-show="serviceArr?.own_priest == false"><span class="font-bold">Priest Name:
-                                            </span> <span x-text="serviceArr?.priest_id"></span></p>
+                                            </span> <span x-text="serviceArr?.priest_name"></span></p>
                                         <p x-show="serviceArr?.own_priest"><span class="font-bold">Schedule: </span>
                                             <span x-text="serviceArr?.date"></span>
                                         </p>
 
                                         <p x-show="serviceArr?.own_priest == false"><span class="font-bold">Schedule:
-                                            </span> <span x-text="serviceArr?.date_id"></span></p>
+                                            </span> <span x-text="serviceArr?.service_sched"></span></p>
 
 
                                     </div>

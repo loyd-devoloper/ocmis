@@ -18,4 +18,8 @@ class Urn extends Model
     {
         return $this->hasOne(\App\Models\Niche::class,'id','niche_id');
     }
+    public function urnInfo()
+    {
+        return $this->hasOne(\App\Models\NicheOwner::class,'niche_id','niche_id');
+    }
 }

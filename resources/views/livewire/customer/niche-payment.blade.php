@@ -168,7 +168,7 @@
             </div>
 
             <input type="checkbox" id="modalProduct" x-model="modalProduct" class="modal-toggle" />
-            <div x-ref="modal" class="modal  " >
+            <div x-ref="modal" class="modal  ">
 
                 <form x-cloak wire:submit="submit" class="w-11/12 max-w-6xl modal-box">
 
@@ -247,11 +247,9 @@
 
                                                 <button x-on:click="changeQuantity(product,'minus')"
                                                     :disabled="product?.quantitys < 2"
-
                                                     class="border rounded-md py-2 px-4 mr-2">-</button>
                                                 <span class="text-center w-8" x-text="product?.quantitys"></span>
                                                 <button x-on:click="changeQuantity(product,'plus')"
-
                                                     class="border rounded-md py-2 px-4 ml-2">+</button>
                                             </div>
                                         </td>
@@ -309,7 +307,10 @@
                 date: '',
                 own_priest: false,
                 priest_id: '',
-                date_id: ''
+                priest_name: '',
+                date_id: '',
+                service_name: '',
+                service_sched: '',
 
             },
             serviceArr: serviceArr,
@@ -397,9 +398,16 @@
 
                 return time12Hour;
             },
-            submit() {
+           async submit() {
+                if(this.service.own_priest == false)
+                {
+                    this.service.service_sched = await $wire.priestSched(this.service.date_id);
+                    this.service.priest_name = await $wire.priestName(this.service.priest_id);
+                }
                 this.my_modal_6 = !this.my_modal_6
-                this.serviceArr = this.service;
+                this.serviceArr = await this.service;
+                var serviceName = await $wire.serviceName(this.service.service_id);
+                console.log( this.serviceArr)
 
                 localStorage.setItem('service', JSON.stringify(this.serviceArr))
             },
@@ -408,7 +416,7 @@
 
                 if (!!this.productArr[product.id]) {
 
-                    $wire.changeQuantitys(type,product.id);
+                    $wire.changeQuantitys(type, product.id);
                     if (type == 'minus') {
                         var x = this.productArr[product.id];
                         this.productArr[product.id]['quantitys'] = x.quantitys - 1;
@@ -432,11 +440,7 @@
                 }
             },
             init() {
-                new FilamentNotification()
-    .title('Saved successfully')
-    .success()
-    .body('Changes to the post have been saved.')
-    .send()
+
                 if (localStorage.getItem('service') !== null) {
 
                     this.serviceArr = JSON.parse(localStorage.getItem('service'))

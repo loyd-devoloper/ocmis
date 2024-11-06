@@ -47,10 +47,26 @@
                     <td>{{ $record->price }}</td>
 
                     <td>{{ $record->total_paid }}</td>
+                    {{-- <td>{{ $record->sum('price') }}</td> --}}
 
                 </tr>
             @endforeach
         </tbody>
+        <tfoot>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+
+                <td></td>
+                <td><strong>Total</strong></td>
+
+                <td>{{ session('records')->sum('total_paid') }}</td>
+            </tr>
+        </tfoot>
+
     </table>
     <script>
         window.onload = function() {
