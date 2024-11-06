@@ -14,7 +14,7 @@
                 <!-- Slides -->
                 <div class="swiper-slide relative !flex !justify-center !h-full ">
                     <img class="min-h-[40svh] max-h-[40svh]"
-                    src="{{ asset('Asset/columbarium1.png') }}"
+                    src="{{ asset('Asset/9eebdb4e-0bc2-4a8d-b7d4-94ed19c3be6b.jfif') }}"
                     alt="carousel image"  />
                 </div>
                 <div class="swiper-slide relative !flex !justify-center !h-full ">
