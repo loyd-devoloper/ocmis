@@ -66,19 +66,13 @@
                     </ul>
                 </details>
             </li>
-            <li>
-                <details  {{ request()->routeIs('admin.forecast.buildings') || request()->routeIs('admin.forecast.sales') || request()->routeIs('admin.forecast.niches') || request()->routeIs('admin.forecast.view')  ? 'open' : 'close' }}>
-                    <summary>Forecast</summary>
-                    <ul>
-                        <li><a href="{{ route('admin.forecast.buildings') }}"
-                            class="{{ request()->routeIs('admin.forecast.buildings') ? 'active' : '' }}">Forecast</a></li>
 
-                        <li><a href="{{ route('admin.forecast.sales') }}"
-                            class="{{ request()->routeIs('admin.forecast.sales') ? 'active' : '' }}">Sales</a></li>
+                <li><a href="{{ route('admin.forecast.buildings') }}"
+                    class="{{ request()->routeIs('admin.forecast.buildings') ? 'active' : '' }}">Forecast</a></li>
 
-                    </ul>
-                </details>
-            </li>
+            <li><a href="{{ route('admin.forecast.sales') }}"
+                class="{{ request()->routeIs('admin.forecast.sales') ? 'active' : '' }}">Sales</a></li>
+
         </ul>
     </aside>
     <main class="  min-w-[calc(100svw-18rem)] max-w-[calc(100svw-18rem)] max-h-screen overflow-y-auto px-10 pb-10 pt-2">

@@ -23,6 +23,7 @@ class PaymentPage extends Component implements HasForms
     public $priests = [];
 
     public $own_priest = false;
+    public $priest_name = "";
     public $date;
     public $priest_id;
     public $message;
@@ -68,12 +69,15 @@ class PaymentPage extends Component implements HasForms
         if ($this->own_priest) {
             $createservice->update([
                 'date' => $this->date,
+                'priest_name' => $this?->priest_name,
             ]);
         } else {
             \App\Models\PriestSchedule::where('id',$this->schedule)->update(['status'=>1]);
+            $x = \App\Models\Priest::where('id',$this->priest_id)->first();
             $createservice->update([
                 'schedule_id' => $this->schedule,
                 'priest_id' => $this->priest_id,
+                'priest_name' => $x?->name,
             ]);
         }
         if ($this->payment_method == 'Gcash') {

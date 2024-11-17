@@ -34,6 +34,12 @@
                       <label for="ownPriest" class="label-text ">Own Priest: </label>
                       <input type="checkbox" x-model="own_priest" id="ownPriest" wire:model="own_priest" />
                   </div>
+                  <label x-show="own_priest" class="form-control w-full ">
+
+                    <span class="label-text"> PRIEST NAME: </span>
+                    <input type="text" placeholder="Type here" class="input input-bordered w-full " wire:model="priest_name" required/>
+
+                </label>
                   <div x-show="own_priest" class="mb-3">
                     <label>Schedule: </label>
                     {{ $this->form }}

@@ -90,7 +90,7 @@ class MyNiche extends Component implements HasForms, HasTable
             ->query(Niche::query()->with(['buildingInfo', 'customerInfo', 'installments'])->where('customer_id', Auth::id()))
 
             ->columns([
-                TextColumn::make('id')->searchable(),
+                TextColumn::make('id')->label('ref'),
                 ImageColumn::make('image')->width(50)->height(50),
                 TextColumn::make('buildingInfo.name')->label('Buinding Name')->searchable(),
                 TextColumn::make('niche_number'),
@@ -104,6 +104,7 @@ class MyNiche extends Component implements HasForms, HasTable
 
                 TextColumn::make('price')->label('Niche Price'),
                 TextColumn::make('price_checkout')->label('Total'),
+                TextColumn::make('downpayment'),
                 TextColumn::make('total_paid')->label('Total Paid'),
 
 

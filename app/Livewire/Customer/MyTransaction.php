@@ -5,7 +5,9 @@ namespace App\Livewire\Customer;
 use Carbon\Carbon;
 use Livewire\Component;
 
+use App\Enums\StatusEnum;
 use Filament\Tables\Table;
+use App\Models\UserService;
 use App\Models\Shop\Product;
 use Livewire\Attributes\Title;
 use Filament\Support\Colors\Color;
@@ -17,6 +19,7 @@ use Illuminate\Support\Facades\Mail;
 use Luigel\Paymongo\Facades\Paymongo;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Notifications\Notification;
@@ -50,11 +53,13 @@ class MyTransaction extends Component implements HasForms, HasTable
         return $table
             ->query(\App\Models\UserService::query()->with(['category', 'userInfo', 'schedule', 'priest'])->where('user_id', Auth::id())->orderByDesc('id'))
             ->columns([
-                TextColumn::make('id'),
+                TextColumn::make('id')->label('Ref'),
 
                 TextColumn::make('category.name'),
                 TextColumn::make('category.price'),
-                TextColumn::make('priest')->state(fn($record) => !!$record->priest_id ? $record?->priest?->name : 'Own Priest'),
+                IconColumn::make('own_priest')
+                ->boolean(),
+                TextColumn::make('priest_name'),
                 TextColumn::make('userInfo.username')->label('User')->searchable(['username']),
                 TextColumn::make('date')->state(function ($record) {
                     if ($record->own_priest) {

@@ -104,6 +104,7 @@ class Niche extends Component implements HasForms, HasTable
             ])
             ->columns([
                 // TextColumn::make('id')->searchable(),
+                TextColumn::make('id')->label('Ref')->searchable(),
                 ImageColumn::make('image')->width(50)->height(50),
                 TextColumn::make('buildingInfo.name')->label('Building Name')->searchable(),
                 TextColumn::make('niche_number'),

@@ -6,6 +6,7 @@ use Carbon\Carbon;
 
 use Livewire\Component;
 use Filament\Forms\Form;
+use Illuminate\Support\Str;
 use Filament\Forms\Contracts\HasForms;
 use function Filament\Support\format_number;
 use Filament\Forms\Components\DateTimePicker;
@@ -117,6 +118,10 @@ class NichePayment extends Component implements HasForms
     }
     public function render()
     {
+
+
+
+
 
         $aLLServices = \App\Models\Category::get();
         $serviceArray = $this->serviceArr;

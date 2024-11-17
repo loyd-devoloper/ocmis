@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('niches', function (Blueprint $table) {
-            $table->id();
+            $table->id()->from(010000000);
             $table->unsignedBigInteger('customer_id')->nullable();
             $table->unsignedBigInteger('building_id')->nullable();
             $table->string('niche_number');

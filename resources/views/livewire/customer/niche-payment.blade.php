@@ -176,6 +176,9 @@
                     <label for="modalProduct" class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</label>
 
                     <h3 class="text-lg font-bold">Invoice</h3>
+                    <div class="flex justify-end">
+                        <span class="text-2xl">TOTAL: <strong x-text="'₱'+productTotal"></strong></span>
+                    </div>
                     <section>
                         <div class="grid grid-cols-3 max-w-screen-lg  mx-auto py-10 gap-10">
                             @foreach ($products as $product)
@@ -188,7 +191,19 @@
                                         <p>Stock: {{ $product->quantity }}</p>
                                         <p>₱{{ $product->price }}</p>
 
-                                        <div class="card-actions justify-end">
+                                        <div class="card-actions justify-between items-center">
+                                            <x-filament::icon-button x-show="perProduct({{ $product->id }}) !== 0" icon="heroicon-m-trash" color="danger"
+                                                x-on:click="removeProduct({{ $product }})" label="New label" />
+
+                                            <div class="flex items-center" x-show="perProduct({{ $product->id }}) !== 0">
+
+                                                <button type="button" x-on:click="changeQuantity({{ $product }},'minus')"
+
+                                                    class="border rounded-md py-2 px-4 mr-2">-</button>
+                                                <span class="text-center w-8"   x-text="perProduct({{ $product->id }})"></span>
+                                                <button type="button" x-on:click="changeQuantity({{ $product }},'plus')"
+                                                    class="border rounded-md py-2 px-4 ml-2">+</button>
+                                            </div>
                                             <button type="button" x-on:click="addProduct({{ $product }})"
                                                 class="btn border border-primary bg-none">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -214,6 +229,7 @@
             <input type="checkbox" id="modalProduct" x-model="modalProduct" class="modal-toggle" />
 
             <input type="checkbox" id="items" x-model="items" class="modal-toggle" />
+            {{-- product table --}}
             <div x-ref="modal" class="modal  " wire:ignore>
 
                 <div class="w-11/12 max-w-6xl modal-box">
@@ -245,11 +261,11 @@
                                         <td class="py-4 px-6 border-b border-gray-200 truncate">
                                             <div class="flex items-center">
 
-                                                <button x-on:click="changeQuantity(product,'minus')"
+                                                <button type="button" x-on:click="changeQuantity({{ $product }},'minus')"
                                                     :disabled="product?.quantitys < 2"
                                                     class="border rounded-md py-2 px-4 mr-2">-</button>
                                                 <span class="text-center w-8" x-text="product?.quantitys"></span>
-                                                <button x-on:click="changeQuantity(product,'plus')"
+                                                <button type="button" x-on:click="changeQuantity({{ $product }},'plus')"
                                                     class="border rounded-md py-2 px-4 ml-2">+</button>
                                             </div>
                                         </td>
@@ -322,8 +338,8 @@
                 return `${date} -- ${this.changeTIme(start)} TO ${this.changeTIme(end)}`;
             },
             removeProduct(product) {
-
-
+                console.log(product)
+                this.productArr.splice(product.id, 1);
                 var x = this.productArr.map((val, key) => {
                     if (!!val) {
                         if (val.id !== product.id) {
@@ -334,7 +350,7 @@
                     // return val?.id !== product.id;
                 });
                 this.productArr = x;
-                console.log(x)
+
                 var self = this;
                 this.productTotal = 0;
                 this.productArr.filter((val, key) => {
@@ -378,7 +394,7 @@
                         return val;
                     })
                 }
-
+                this.perProduct(product.id)
             },
             changeTIme(time) {
                 var timeArray = time.split(':');
@@ -398,16 +414,15 @@
 
                 return time12Hour;
             },
-           async submit() {
-                if(this.service.own_priest == false)
-                {
+            async submit() {
+                if (this.service.own_priest == false) {
                     this.service.service_sched = await $wire.priestSched(this.service.date_id);
                     this.service.priest_name = await $wire.priestName(this.service.priest_id);
                 }
                 this.my_modal_6 = !this.my_modal_6
                 this.serviceArr = await this.service;
                 var serviceName = await $wire.serviceName(this.service.service_id);
-                console.log( this.serviceArr)
+
 
                 localStorage.setItem('service', JSON.stringify(this.serviceArr))
             },
@@ -439,6 +454,17 @@
                     })
                 }
             },
+            perProduct(product_id) {
+
+                if (this.productArr.hasOwnProperty(product_id)) {
+                    var x = this.productArr[product_id].quantitys;
+                    return x;
+                } else {
+                    return 0;
+                }
+
+            },
+
             init() {
 
                 if (localStorage.getItem('service') !== null) {
@@ -488,7 +514,7 @@
                 var self = this;
 
                 this.$watch('service.priest_id', (value) => {
-                    console.log(value)
+
                     if (!!value) {
                         self.showSched = [];
 

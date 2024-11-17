@@ -39,7 +39,9 @@ class Niche extends Model
         'checkout_url',
         'payment_ref',
         'status_payment',
-        'plan'
+        'plan',
+        'downpayment',
+        'ref_number'
 
     ];
 

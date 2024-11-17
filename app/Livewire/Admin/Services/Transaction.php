@@ -13,6 +13,7 @@ use Filament\Support\Enums\MaxWidth;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Forms\Components\TextInput;
@@ -38,7 +39,9 @@ class Transaction extends Component implements HasForms, HasTable
                 TextColumn::make('id'),
 
                 TextColumn::make('category.name'),
-                TextColumn::make('priest')->state(fn($record) => !!$record->priest_id ? $record?->priest?->name : 'Own Priest'),
+                IconColumn::make('own_priest')
+                ->boolean(),
+                TextColumn::make('priest_name'),
                 TextColumn::make('userInfo.username')->label('User')->searchable(['username']),
                 TextColumn::make('date')->state(function($record){
                     if($record->own_priest)
