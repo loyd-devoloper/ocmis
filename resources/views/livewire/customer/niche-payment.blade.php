@@ -33,16 +33,16 @@
                         </svg>
                         Add Services
                     </label>
+                    <label for="modalProduct" class="btn" class="flex items-center">
 
-                    <div>
-                        <label for="modalProduct" class="btn" class="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                            stroke-width="1.5" stroke="currentColor" class="size-5 text-blue-500">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                        </svg>
+                        Add Product
+                    </label>
+                    {{-- <div>
 
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                stroke-width="1.5" stroke="currentColor" class="size-5 text-blue-500">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                            </svg>
-                            Add Product
-                        </label>
                         <label for="items" class="btn" class="flex items-center">
 
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -54,7 +54,7 @@
 
                         </label>
 
-                    </div>
+                    </div> --}}
                 </div>
                 {{-- <div x-data="{payment_method: 'Full'}">
                     <p class="text-xs">PAYMENT TYPE </p>
@@ -228,9 +228,9 @@
             </div>
             <input type="checkbox" id="modalProduct" x-model="modalProduct" class="modal-toggle" />
 
-            <input type="checkbox" id="items" x-model="items" class="modal-toggle" />
+            {{-- <input type="checkbox" id="items" x-model="items" class="modal-toggle" /> --}}
             {{-- product table --}}
-            <div x-ref="modal" class="modal  " wire:ignore>
+            {{-- <div x-ref="modal" class="modal  " wire:ignore>
 
                 <div class="w-11/12 max-w-6xl modal-box">
 
@@ -256,8 +256,7 @@
                                     <tr x-show="!!product">
                                         <td class="py-4 px-6 border-b border-gray-200" x-text="product?.product_name">
                                             John Doe</td>
-                                        {{-- <td class="py-4 px-6 border-b border-gray-200 truncate"
-                                            x-text="product?.quantitys">johndoe@gmail.com</td> --}}
+
                                         <td class="py-4 px-6 border-b border-gray-200 truncate">
                                             <div class="flex items-center">
 
@@ -277,7 +276,7 @@
                                         </td>
                                     </tr>
                                 </template>
-                                <!-- Add more rows here -->
+
                             </tbody>
                             <tfoot class="bg-white">
 
@@ -298,7 +297,7 @@
                         <label for="items" class="btn">Close</label>
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
         </section>
 
@@ -338,8 +337,9 @@
                 return `${date} -- ${this.changeTIme(start)} TO ${this.changeTIme(end)}`;
             },
             removeProduct(product) {
-                console.log(product)
-                this.productArr.splice(product.id, 1);
+
+                // var newarr = this.productArr.splice(product.id, 1);
+                // console.log(newarr)
                 var x = this.productArr.map((val, key) => {
                     if (!!val) {
                         if (val.id !== product.id) {
@@ -394,7 +394,7 @@
                         return val;
                     })
                 }
-                this.perProduct(product.id)
+                // this.perProduct(product.id)
             },
             changeTIme(time) {
                 var timeArray = time.split(':');
@@ -458,6 +458,7 @@
 
                 if (this.productArr.hasOwnProperty(product_id)) {
                     var x = this.productArr[product_id].quantitys;
+                    console.log(x)
                     return x;
                 } else {
                     return 0;

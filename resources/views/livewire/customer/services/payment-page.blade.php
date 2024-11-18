@@ -37,7 +37,7 @@
                   <label x-show="own_priest" class="form-control w-full ">
 
                     <span class="label-text"> PRIEST NAME: </span>
-                    <input type="text" placeholder="Type here" class="input input-bordered w-full " wire:model="priest_name" required/>
+                    <input type="text" placeholder="Type here" class="input input-bordered w-full " wire:model="priest_name" :required="own_priest"/>
 
                 </label>
                   <div x-show="own_priest" class="mb-3">

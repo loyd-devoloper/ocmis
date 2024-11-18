@@ -156,13 +156,14 @@ class Checkout extends Component
                 ]);
 
             }
-
+            $inv = 'INV-' . date('Y') . '-' . str_pad($this->niche_id, 5, '0', STR_PAD_LEFT);
+            \App\Models\Niche::where('id', $this->niche_id)->update([
+                'ref_number' => $inv ,
+                'downpayment' => $this->downpayment
+            ]);
         }
-        $inv = 'INV-' . date('Y') . '-' . str_pad($this->niche_id, 5, '0', STR_PAD_LEFT);
-        \App\Models\Niche::where('id', $this->niche_id)->update([
-            'ref_number' => $inv ,
-            'downpayment' => $this->downpayment
-        ]);
+
+
         if ($this->payment_method == 'Gcash') {
             $level = $this->niche?->level;
             $niche_number = $this->niche?->niche_number;
