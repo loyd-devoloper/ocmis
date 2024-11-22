@@ -9,39 +9,50 @@
 
 
         {{-- section --}}
-        <section class="p-10" x-data="dropdown(@js($schedules), @entangle('serviceArr'), @entangle('productArr'))">
+        <section class="p-10" x-data="dropdown(@js($schedules), @entangle('serviceArr'), @entangle('productArr'), @entangle('date'))">
 
 
-            <form class="card bg-white max-w-screen-sm mx-auto p-4 space-y-2">
-                <img src="{{ asset('storage/' . $niche->image) }}"
-                    class="min-h-[8rem] mx-auto max-w-[8rem] min-w-[8rem] max-h-[8rem]" alt="">
-                <p class="text-center border border-black p-2 rounded">{{ $niche->level }} - {{ $niche->niche_number }}
-                </p>
-                <p class="text-center border border-black p-2 rounded">₱{{ $niche?->price }}</p>
-                <article>
-                    <h5>Description</h5>
-                    <div class="px-3 py-2">
-                        {!! $niche?->description !!}
-                    </div>
-                </article>
-                <div class="grid grid-cols-2 gap-10">
-                    <label for="my_modal_6" class="btn" class="flex items-center">
+            <main class="max-w-screen-xl mx-auto  grid grid-cols-3">
+                <div class="col-span-2 space-y-3">
+                    <form class="card bg-white w-11/12 max-w-2xl   p-4 space-y-2">
+                        <img src="{{ asset('storage/' . $niche->image) }}"
+                            class="min-h-[8rem] mx-auto max-w-[8rem] min-w-[8rem] max-h-[8rem]" alt="">
+                        <p class="text-center border border-black p-2 rounded">{{ $niche->level }} -
+                            {{ $niche->niche_number }}
+                        </p>
+                        <p class="text-center border border-black p-2 rounded">₱{{ $niche?->price }}</p>
+                        <article>
+                            <h5>Description</h5>
+                            <div class="px-3 py-2">
+                                {!! $niche?->description !!}
+                            </div>
+                        </article>
+                        <div class="grid grid-cols-2 gap-10">
+                            <div x-on:click="service.open_services = true" class="btn" class="flex items-center">
+
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="size-5 text-blue-500">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                                </svg>
+                                Add Services
+                            </div>
+                            {{-- <label for="my_modal_6" class="btn" class="flex items-center">
 
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="size-5 text-blue-500">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                         </svg>
                         Add Services
-                    </label>
-                    <label for="modalProduct" class="btn" class="flex items-center">
+                    </label> --}}
+                            <label for="modalProduct" class="btn" class="flex items-center">
 
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                            stroke-width="1.5" stroke="currentColor" class="size-5 text-blue-500">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                        </svg>
-                        Add Product
-                    </label>
-                    {{-- <div>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="size-5 text-blue-500">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                                </svg>
+                                Add Product
+                            </label>
+                            {{-- <div>
 
                         <label for="items" class="btn" class="flex items-center">
 
@@ -55,8 +66,8 @@
                         </label>
 
                     </div> --}}
-                </div>
-                {{-- <div x-data="{payment_method: 'Full'}">
+                        </div>
+                        {{-- <div x-data="{payment_method: 'Full'}">
                     <p class="text-xs">PAYMENT TYPE </p>
 
                     <input type="radio" wire:model.live="payment_method" x-model="payment_method" value="Full" class="radio  radio-xs"  /> <span
@@ -84,88 +95,177 @@
                         </label>
                     </div>
                 </div> --}}
-                <a class="btn btn-primary btn-md" type="button"
-                    href="{{ route('niches.payment.checkout', ['niche_id' => $niche_id]) }}">Proceed to checkout </a>
-            </form>
+                        {{-- <a class="btn btn-primary btn-md" type="button"
+                        href="{{ route('niches.payment.checkout', ['niche_id' => $niche_id]) }}">Proceed to checkout
+                    </a> --}}
+                    </form>
+
+                    {{-- services --}}
+                    {{-- <input type="checkbox" id="my_modal_6" x-model="my_modal_6" class="modal-toggle" />
+                    <div x-ref="modal" class="modal  " wire:ignore>
+
+                        <form x-on:submit.prevent="submit" x-cloak class="w-11/12 max-w-2xl ">
+                            <h3 class="text-lg font-bold">Invoice</h3>
+                            <section>
 
 
-            <input type="checkbox" id="my_modal_6" x-model="my_modal_6" class="modal-toggle" />
-            <div x-ref="modal" class="modal  " wire:ignore>
+                                <div class="p-4 space-y-4">
+                                    <label class="form-control w-full ">
 
-                <form x-on:submit.prevent="submit" x-cloak class="w-11/12 max-w-2xl modal-box">
-                    <h3 class="text-lg font-bold">Invoice</h3>
-                    <section>
+                                        <span class="label-text">SERVICES</span>
+
+                                        <select x-model="service.service_id" class="select select-bordered" required>
+                                            <option value="" disabled selected>-- Select --</option>
+                                            @foreach ($aLLServices as $service)
+                                                <option value="{{ $service->id }}">{{ $service->name }}</option>
+                                            @endforeach
+                                        </select>
+
+                                    </label>
+                                    <label class="form-control w-full ">
+
+                                        <span class="label-text"> DECEASED NAME: </span>
+                                        <input type="text" placeholder="Type here" class="input input-bordered w-full "
+                                            x-model="service.deceased_name" required />
+
+                                    </label>
+                                    <label class="form-control w-full ">
+                                        <span class="label-text"> MESSAGE: </span>
+                                        <textarea placeholder="Type here" class="textarea textarea-bordered h-24" x-model="service.message" required></textarea>
+                                    </label>
+
+                                    <div class="flex items-center gap-1">
+                                        <label for="ownPriest" class="label-text ">Own Priest: </label>
+                                        <input type="checkbox" x-model="service.own_priest" id="ownPriest" />
+                                    </div>
+                                    <div x-show="service.own_priest" class="mb-3">
+                                        <label>Schedule: </label>
+                                        {{ $this->form }}
+                                    </div>
+
+                                    <div x-show="service.own_priest == false" class="mb-3" id="priestDropdown">
+                                        <label for="priest" class="form-label">Priest</label>
+                                        <select x-model="service.priest_id" id="priest" class="form-select"
+                                            :required="service.own_priest == false ? true : false">
+                                            <option value="" selected>-- Select --</option>
+                                            @foreach ($priests as $priest)
+                                                <option value="{{ $priest->id }}">Fr. {{ $priest->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div x-show="showSched && service.own_priest == false" class="mb-3" id="priestDropdown">
+                                        <label for="priest" class="form-label">Priest Schedules <span
+                                                class="text-secondary">(Date -- Start Time TO End Time)</span></label>
+                                        <select class="form-select" id="priest" x-model="service.date_id"
+                                            :required="service.own_priest == false ? true : false">
+                                            <option value="" selected>-- Select --</option>
 
 
-                        <div class="p-4 space-y-4">
-                            <label class="form-control w-full ">
+                                            <template x-for="(v,i) in sched || []" x-key="i">
+                                                <option :value="v.id"
+                                                    x-text="changeName(v.date,v.start_time,v.end_time)"></option>
+                                            </template>
+                                        </select>
+                                    </div>
 
-                                <span class="label-text">SERVICES</span>
 
-                                <select x-model="service.service_id" class="select select-bordered" required>
-                                    <option value="" disabled selected>-- Select --</option>
-                                    @foreach ($aLLServices as $service)
-                                        <option value="{{ $service->id }}">{{ $service->name }}</option>
-                                    @endforeach
-                                </select>
+                                </div>
+                            </section>
 
-                            </label>
-                            <label class="form-control w-full ">
-
-                                <span class="label-text"> DECEASED NAME: </span>
-                                <input type="text" placeholder="Type here" class="input input-bordered w-full "
-                                    x-model="service.deceased_name" required />
-
-                            </label>
-                            <label class="form-control w-full ">
-                                <span class="label-text"> MESSAGE: </span>
-                                <textarea placeholder="Type here" class="textarea textarea-bordered h-24" x-model="service.message" required></textarea>
-                            </label>
-
-                            <div class="flex items-center gap-1">
-                                <label for="ownPriest" class="label-text ">Own Priest: </label>
-                                <input type="checkbox" x-model="service.own_priest" id="ownPriest" />
+                            <div class="modal-action">
+                                <button class="btn btn-primary btn-md">Submit</button>
+                                <label for="my_modal_6" class="btn">Close!</label>
                             </div>
-                            <div x-show="service.own_priest" class="mb-3">
-                                <label>Schedule: </label>
-                                {{ $this->form }}
+                        </form>
+                    </div> --}}
+
+                    <form x-show="service.open_services" x-on:submit.prevent="submit" x-cloak
+                        class="w-11/12 max-w-2xl card bg-white p-4">
+                        <h3 class="text-lg font-bold">Services</h3>
+                        <section>
+
+
+                            <div class="p-4 space-y-4">
+                                <label class="form-control w-full ">
+
+                                    <span class="label-text">SERVICES</span>
+
+                                    <select x-model="service.service_id" class="select select-bordered" required>
+                                        <option value="" disabled selected>-- Select --</option>
+                                        @foreach ($aLLServices as $service)
+                                            <option value="{{ $service->id }}">{{ $service->name }}</option>
+                                        @endforeach
+                                    </select>
+
+                                </label>
+                                <label class="form-control w-full ">
+
+                                    <span class="label-text"> DECEASED NAME: </span>
+                                    <input type="text" placeholder="Type here" class="input input-bordered w-full "
+                                        x-model="service.deceased_name" required />
+
+                                </label>
+                                <label class="form-control w-full ">
+                                    <span class="label-text"> MESSAGE: </span>
+                                    <textarea placeholder="Type here" class="textarea textarea-bordered h-24" x-model="service.message" required></textarea>
+                                </label>
+
+                                <div class="flex items-center gap-1">
+                                    <label for="ownPriest" class="label-text ">Non-resident: </label>
+                                    <input type="checkbox" x-model="service.own_priest" id="ownPriest" />
+                                </div>
+                                <div x-show="service.own_priest" class="mb-3">
+                                    <label>Schedule: </label>
+                                    {{ $this->form }}
+                                </div>
+
+                                <div x-show="service.own_priest == false" class="mb-3" id="priestDropdown">
+                                    <label for="priest" class="form-label">Priest</label>
+                                    <select x-model="service.priest_id" id="priest" class="form-select"
+                                        :required="service.own_priest == false ? true : false">
+                                        <option value="" selected>-- Select --</option>
+                                        @foreach ($priests as $priest)
+                                            <option value="{{ $priest->id }}">Fr. {{ $priest->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div x-show="showSched && service.own_priest == false" class="mb-3"
+                                    id="priestDropdown">
+                                    <label for="priest" class="form-label">Priest Schedules <span
+                                            class="text-secondary">(Date -- Start Time TO End Time)</span></label>
+                                    <select class="form-select" id="priest" x-model="service.date_id"
+                                        :required="service.own_priest == false ? true : false">
+                                        <option value="" selected>-- Select --</option>
+
+
+                                        <template x-for="(v,i) in sched || []" x-key="i">
+                                            <option :value="v.id"
+                                                x-text="changeName(v.date,v.start_time,v.end_time)"></option>
+                                        </template>
+                                    </select>
+                                </div>
+
+
                             </div>
+                        </section>
 
-                            <div x-show="service.own_priest == false" class="mb-3" id="priestDropdown">
-                                <label for="priest" class="form-label">Priest</label>
-                                <select x-model="service.priest_id" id="priest" class="form-select"
-                                    :required="service.own_priest == false ? true : false">
-                                    <option value="" selected>-- Select --</option>
-                                    @foreach ($priests as $priest)
-                                        <option value="{{ $priest->id }}">Fr. {{ $priest->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div x-show="showSched && service.own_priest == false" class="mb-3" id="priestDropdown">
-                                <label for="priest" class="form-label">Priest Schedules <span
-                                        class="text-secondary">(Date -- Start Time TO End Time)</span></label>
-                                <select class="form-select" id="priest" x-model="service.date_id"
-                                    :required="service.own_priest == false ? true : false">
-                                    <option value="" selected>-- Select --</option>
-
-
-                                    <template x-for="(v,i) in sched || []" x-key="i">
-                                        <option :value="v.id"
-                                            x-text="changeName(v.date,v.start_time,v.end_time)"></option>
-                                    </template>
-                                </select>
-                            </div>
-
-
+                        <div class="modal-action">
+                            <button type="submit" class="btn btn-primary btn-md"
+                                x-show="!service.open_services_submit">Submit</button>
+                            <button type="button" x-on:click="open_services = false" class="btn "
+                                x-show="!service.open_services_submit">Close</button>
+                            {{-- <label for="my_modal_6" class="btn">Close!</label> --}}
                         </div>
-                    </section>
-
-                    <div class="modal-action">
-                        <button class="btn btn-primary btn-md">Submit</button>
-                        <label for="my_modal_6" class="btn">Close!</label>
-                    </div>
+                    </form>
+                    {{-- end services --}}
+                </div>
+                <form class="card bg-white  p-4 h-fit space-y-3">
+                    <h1>Total: <strong>100PHP</strong></h1>
+                    <a class="btn btn-primary btn-md" type="button"
+                        href="{{ route('niches.payment.checkout', ['niche_id' => $niche_id]) }}">Proceed to checkout
+                    </a>
                 </form>
-            </div>
+            </main>
 
             <input type="checkbox" id="modalProduct" x-model="modalProduct" class="modal-toggle" />
             <div x-ref="modal" class="modal  ">
@@ -192,16 +292,20 @@
                                         <p>₱{{ $product->price }}</p>
 
                                         <div class="card-actions justify-between items-center">
-                                            <x-filament::icon-button x-show="perProduct({{ $product->id }}) !== 0" icon="heroicon-m-trash" color="danger"
+                                            <x-filament::icon-button x-show="perProduct({{ $product->id }}) !== 0"
+                                                icon="heroicon-m-trash" color="danger"
                                                 x-on:click="removeProduct({{ $product }})" label="New label" />
 
-                                            <div class="flex items-center" x-show="perProduct({{ $product->id }}) !== 0">
+                                            <div class="flex items-center"
+                                                x-show="perProduct({{ $product->id }}) !== 0">
 
-                                                <button type="button" x-on:click="changeQuantity({{ $product }},'minus')"
-
+                                                <button type="button"
+                                                    x-on:click="changeQuantity({{ $product }},'minus')"
                                                     class="border rounded-md py-2 px-4 mr-2">-</button>
-                                                <span class="text-center w-8"   x-text="perProduct({{ $product->id }})"></span>
-                                                <button type="button" x-on:click="changeQuantity({{ $product }},'plus')"
+                                                <span class="text-center w-8"
+                                                    x-text="perProduct({{ $product->id }})"></span>
+                                                <button type="button"
+                                                    x-on:click="changeQuantity({{ $product }},'plus')"
                                                     class="border rounded-md py-2 px-4 ml-2">+</button>
                                             </div>
                                             <button type="button" x-on:click="addProduct({{ $product }})"
@@ -305,7 +409,9 @@
 </div>
 @script
     <script>
-        Alpine.data('dropdown', (schedules, serviceArr, productArr) => ({
+        Alpine.data('dropdown', (schedules, serviceArr, productArr, date_time = null) => ({
+
+
             open: false,
             my_modal_6: false,
             modalProduct: false,
@@ -326,6 +432,9 @@
                 date_id: '',
                 service_name: '',
                 service_sched: '',
+                schedule_own_priest: date_time ,
+                open_services_submit: false,
+                open_services: false,
 
             },
             serviceArr: serviceArr,
@@ -415,6 +524,7 @@
                 return time12Hour;
             },
             async submit() {
+                this.service.open_services_submit = true;
                 if (this.service.own_priest == false) {
                     this.service.service_sched = await $wire.priestSched(this.service.date_id);
                     this.service.priest_name = await $wire.priestName(this.service.priest_id);
@@ -425,6 +535,7 @@
 
 
                 localStorage.setItem('service', JSON.stringify(this.serviceArr))
+
             },
             changeQuantity(product, type) {
 
@@ -469,7 +580,7 @@
             init() {
 
                 if (localStorage.getItem('service') !== null) {
-
+                    this.service = JSON.parse(localStorage.getItem('service'))
                     this.serviceArr = JSON.parse(localStorage.getItem('service'))
                     // $wire.set('products', JSON.parse(this.productArr))
                 }
@@ -490,16 +601,16 @@
                 }
 
 
-                this.$watch('serviceArr', function(val) {
+                // this.$watch('serviceArr', function(val) {
 
 
-                    if (val.length == 0) {
-                        localStorage.removeItem("service");
-                    } else {
-                        localStorage.setItem('service', JSON.stringify(val))
-                    }
+                //     if (val.length == 0) {
+                //         localStorage.removeItem("service");
+                //     } else {
+                //         localStorage.setItem('service', JSON.stringify(val))
+                //     }
 
-                })
+                // })
                 this.$watch('productArr', function(val) {
                     if (val.length == 0) {
                         localStorage.removeItem("products");
