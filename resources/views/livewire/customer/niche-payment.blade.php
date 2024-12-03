@@ -181,7 +181,17 @@
 
                     <form x-show="service.open_services" x-on:submit.prevent="submit" x-cloak
                         class="w-11/12 max-w-2xl card bg-white p-4">
-                        <h3 class="text-lg font-bold">Services</h3>
+                        <div class="flex justify-between">
+                            <h3 class="text-lg font-bold">Services</h3>
+                            <button x-show="service.open_services_submit" x-on:click="removeService">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="size-6 text-red-500">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                </svg>
+
+                            </button>
+                        </div>
                         <section>
 
 
@@ -252,15 +262,84 @@
                         <div class="modal-action">
                             <button type="submit" class="btn btn-primary btn-md"
                                 x-show="!service.open_services_submit">Submit</button>
-                            <button type="button" x-on:click="open_services = false" class="btn "
+                            <button type="button" x-on:click="service.open_services = false" class="btn "
                                 x-show="!service.open_services_submit">Close</button>
                             {{-- <label for="my_modal_6" class="btn">Close!</label> --}}
                         </div>
                     </form>
                     {{-- end services --}}
+
+                    {{-- products --}}
+                    <main class="w-11/12 max-w-2xl card bg-white p-4" x-show="productArr.length > 0">
+
+                        <div class="shadow-lg rounded-lg overflow-hidden mt-2">
+                            <table class="w-full table-fixed">
+                                <thead>
+                                    <tr class="bg-gray-100">
+                                        <th class="w-1/4 py-4 px-6 text-left text-gray-600 font-bold uppercase">
+                                            Product</th>
+                                        <th class="w-1/4 py-4 px-6 text-left text-gray-600 font-bold uppercase">
+                                            Quantity</th>
+                                        <th class="w-1/4 py-4 px-6 text-left text-gray-600 font-bold uppercase">
+                                            Price</th>
+                                        <th class="w-1/4 py-4 px-6 text-left text-gray-600 font-bold uppercase">
+                                            Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white">
+
+                                    <template x-for="(product,index) in productArr">
+
+
+                                        <tr x-show="!!product">
+                                            <td class="py-4 px-6 border-b border-gray-200"
+                                                x-text="product?.product_name">
+                                                John Doe</td>
+
+                                            <td class="py-4 px-6 border-b border-gray-200 truncate">
+                                                <div class="flex items-center">
+
+                                                    <button type="button"
+                                                        x-on:click="changeQuantity(product,'minus')"
+                                                        :disabled="product?.quantitys < 2"
+                                                        class="border rounded-md py-2 px-4 mr-2">-</button>
+                                                    <span class="text-center w-8" x-text="product?.quantitys"></span>
+                                                    <button type="button" x-on:click="changeQuantity(product,'plus')"
+                                                        class="border rounded-md py-2 px-4 ml-2">+</button>
+                                                </div>
+                                            </td>
+                                            <td class="py-4 px-6 border-b border-gray-200" x-text="product?.price">
+                                                555-555-5555</td>
+                                            <td class="py-4 px-6 border-b border-gray-200">
+                                                <x-filament::icon-button icon="heroicon-m-trash" color="danger"
+                                                    x-on:click="removeProduct(product)" label="New label" />
+                                            </td>
+                                        </tr>
+                                    </template>
+
+                                </tbody>
+                                <tfoot class="bg-white">
+
+                                    <tr class="bg-gray-100">
+                                        <td class="py-4 px-6 border-b border-gray-200"></td>
+                                        <td class="py-4 px-6 border-b border-gray-200"></td>
+                                        <td class="py-4 px-6 border-b border-gray-200"><strong>Total</strong>
+                                        </td>
+                                        <td class="py-4 px-6 border-b border-gray-200"><strong
+                                                x-text="'₱'+productTotal"></strong></td>
+
+                                    </tr>
+                                    </tbody>
+                            </table>
+                        </div>
+                        <div class="modal-action">
+
+                            <label for="items" class="btn">Close</label>
+                        </div>
+                    </main>
                 </div>
                 <form class="card bg-white  p-4 h-fit space-y-3">
-                    <h1>Total: <strong>100PHP</strong></h1>
+                    <h1>Total: <strong >₱<span x-text="parseFloat(productTotal)+@js((float)$niche?->price)"></span></strong></h1>
                     <a class="btn btn-primary btn-md" type="button"
                         href="{{ route('niches.payment.checkout', ['niche_id' => $niche_id]) }}">Proceed to checkout
                     </a>
@@ -403,6 +482,7 @@
                 </div>
             </div> --}}
 
+
         </section>
 
     </x-customer.header>
@@ -410,8 +490,6 @@
 @script
     <script>
         Alpine.data('dropdown', (schedules, serviceArr, productArr, date_time = null) => ({
-
-
             open: false,
             my_modal_6: false,
             modalProduct: false,
@@ -432,7 +510,7 @@
                 date_id: '',
                 service_name: '',
                 service_sched: '',
-                schedule_own_priest: date_time ,
+                schedule_own_priest: date_time,
                 open_services_submit: false,
                 open_services: false,
 
@@ -449,15 +527,7 @@
 
                 // var newarr = this.productArr.splice(product.id, 1);
                 // console.log(newarr)
-                var x = this.productArr.map((val, key) => {
-                    if (!!val) {
-                        if (val.id !== product.id) {
-
-                            return this.productArr[key] = val;
-                        }
-                    }
-                    // return val?.id !== product.id;
-                });
+                var x = this.productArr.filter((val, key) => val.id !== product.id);
                 this.productArr = x;
 
                 var self = this;
@@ -471,38 +541,73 @@
                 })
             },
             addProduct(product) {
-                $wire.changeQuantity(product.id);
-
-                if (!!this.productArr[product.id]) {
-
-
-                    var x = this.productArr[product.id];
-                    this.productArr[product.id]['quantitys'] = x.quantitys + 1;
-                    this.productArr[product.id] = x;
-                    var self = this;
-                    this.productTotal = 0;
-                    this.productArr.filter((val) => {
+                // $wire.changeQuantity(product.id);
+                const index = this.productArr.findIndex(oldProduct => oldProduct.id === product.id);
+                this.productTotal = 0;
+                if (index !== -1) {
+                  var self = this;
+                    var x = this.productArr.map((val) => {
 
                         if (!!val) {
-                            self.productTotal += parseInt(val.quantitys) * parseInt(val.price);
+
+                            if (val.id == product.id) {
+                                val.quantitys = val.quantitys + 1;
+                                self.productTotal += parseInt(val.quantitys) * parseInt(val.price);
+                            } else {
+                                self.productTotal += parseInt(val.quantitys) * parseInt(val.price);
+                            }
+
                         }
+
                         return val;
                     })
-
                 } else {
+                    // Add new product
                     product['quantitys'] = 1;
-                    this.productArr[product.id] = product;
-
-                    var self = this;
-                    this.productTotal = 0;
-                    this.productArr.filter((val) => {
-
-                        if (!!val) {
-                            self.productTotal += parseInt(val.quantitys) * parseInt(val.price);
-                        }
-                        return val;
-                    })
+                    this.productArr.push(product);
+                    this.productTotal += parseInt(product.quantitys) * parseInt(product.price);
                 }
+
+
+                // if (!!this.productArr[product.id]) {
+
+
+                //     var x = this.productArr[product.id];
+                //     this.productArr[product.id]['quantitys'] = x.quantitys + 1;
+                //     this.productArr[product.id] = x;
+                //     var self = this;
+                //     this.productTotal = 0;
+                //     this.productArr.filter((val) => {
+
+                //         if (!!val) {
+                //             self.productTotal += parseInt(val.quantitys) * parseInt(val.price);
+
+                //         }
+                //         return val;
+
+                //     })
+
+                // } else {
+
+                //     product['quantitys'] = 1;
+                //     this.productArr.push(product);
+
+                //     var self = this;
+                //     this.productTotal = 0;
+
+                //     var x = this.productArr.map((val) => {
+
+                //         if (!!val) {
+                //             self.productTotal += parseInt(val.quantitys) * parseInt(val.price);
+
+                //         }
+                //         return val;
+                //     })
+
+
+                // }
+                // console.log(this.productArr)
+                // localStorage.setItem('products', this.productArr)
                 // this.perProduct(product.id)
             },
             changeTIme(time) {
@@ -569,14 +674,38 @@
 
                 if (this.productArr.hasOwnProperty(product_id)) {
                     var x = this.productArr[product_id].quantitys;
-                    console.log(x)
+
                     return x;
                 } else {
                     return 0;
                 }
 
             },
+            async removeService() {
+                this.service.open_services = false;
+                this.service.open_services_submit = false;
+                this.serviceArr.open_services_submit = false;
+                this.serviceArr.open_services = false;
+                this.service.deceased_name = '';
+                this.serviceArr.deceased_name = '';
+                this.service.message = '';
+                this.serviceArr.message = '';
+                this.service.service_id = '';
+                this.serviceArr.service_id = '';
+                this.service.date_id = '';
+                this.serviceArr.date_id = '';
+                this.service.priest_id = '';
+                this.service.priest_id = '';
+                this.serviceArr.priest_name = '';
+                this.serviceArr.priest_name = '';
+                this.service.own_priest = false;
+                this.serviceArr.own_priest = false;
 
+                this.serviceArr = await this.service;
+
+                localStorage.setItem('service', JSON.stringify(this.serviceArr))
+                // localStorage.removeItem('service');
+            },
             init() {
 
                 if (localStorage.getItem('service') !== null) {
@@ -612,6 +741,7 @@
 
                 // })
                 this.$watch('productArr', function(val) {
+
                     if (val.length == 0) {
                         localStorage.removeItem("products");
                     } else {
