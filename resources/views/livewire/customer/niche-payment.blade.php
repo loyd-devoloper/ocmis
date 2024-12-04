@@ -339,7 +339,7 @@
                     </main>
                 </div>
                 <form class="card bg-white  p-4 h-fit space-y-3">
-                    <h1>Total: <strong >₱<span x-text="parseFloat(productTotal)+@js((float)$niche?->price)"></span></strong></h1>
+                    <h1>Total: <strong>₱<span x-text="parseFloat(productTotal)+@js((float) $niche?->price)"></span></strong></h1>
                     <a class="btn btn-primary btn-md" type="button"
                         href="{{ route('niches.payment.checkout', ['niche_id' => $niche_id]) }}">Proceed to checkout
                     </a>
@@ -541,11 +541,12 @@
                 })
             },
             addProduct(product) {
-                // $wire.changeQuantity(product.id);
+                $wire.changeQuantity(product.id);
                 const index = this.productArr.findIndex(oldProduct => oldProduct.id === product.id);
-                this.productTotal = 0;
+
                 if (index !== -1) {
-                  var self = this;
+                    this.productTotal = 0;
+                    var self = this;
                     var x = this.productArr.map((val) => {
 
                         if (!!val) {
@@ -644,38 +645,77 @@
             },
             changeQuantity(product, type) {
 
-
-                if (!!this.productArr[product.id]) {
+                const index = this.productArr.findIndex(oldProduct => oldProduct.id === product.id);
+                this.productTotal = 0;
+                if (index !== -1) {
+                    // if (!!this.productArr[product.id]) {
 
                     $wire.changeQuantitys(type, product.id);
                     if (type == 'minus') {
-                        var x = this.productArr[product.id];
-                        this.productArr[product.id]['quantitys'] = x.quantitys - 1;
-                        this.productArr[product.id] = x;
+                        // var x = this.productArr[product.id];
+                        // this.productArr[product.id]['quantitys'] = x.quantitys - 1;
+                        // this.productArr[product.id] = x;
+                        var self = this;
+                        var x = this.productArr.map((val) => {
+
+                            if (!!val) {
+
+                                if (val.id == product.id) {
+                                    val.quantitys = val.quantitys - 1;
+                                    self.productTotal += parseInt(val.quantitys) * parseInt(val.price);
+                                } else {
+                                    self.productTotal += parseInt(val.quantitys) * parseInt(val.price);
+                                }
+
+                            }
+
+                            return val;
+                        })
 
                     } else {
-                        var x = this.productArr[product.id];
-                        this.productArr[product.id]['quantitys'] = x.quantitys + 1;
+                        // var x = this.productArr[product.id];
+                        // this.productArr[product.id]['quantitys'] = x.quantitys + 1;
 
-                        this.productArr[product.id] = x;
+                        // this.productArr[product.id] = x;
+                        var self = this;
+                        var x = this.productArr.map((val) => {
+
+                            if (!!val) {
+
+                                if (val.id == product.id) {
+                                    val.quantitys = val.quantitys + 1;
+                                    self.productTotal += parseInt(val.quantitys) * parseInt(val.price);
+                                } else {
+                                    self.productTotal += parseInt(val.quantitys) * parseInt(val.price);
+                                }
+
+                            }
+
+                            return val;
+                        })
                     }
-                    var self = this;
-                    this.productTotal = 0;
-                    this.productArr.filter((val) => {
+                    // var self = this;
+                    // this.productTotal = 0;
+                    // this.productArr.filter((val) => {
 
-                        if (!!val) {
-                            self.productTotal += parseInt(val.quantitys) * parseInt(val.price);
-                        }
-                        return val;
-                    })
+                    //     if (!!val) {
+                    //         self.productTotal += parseInt(val.quantitys) * parseInt(val.price);
+                    //     }
+                    //     return val;
+                    // })
                 }
             },
             perProduct(product_id) {
+                const index = this.productArr.findIndex(oldProduct => oldProduct.id === product_id);
+                console.log(index)
+                if (index !== -1) {
+                    var self = this;
+                    // var x = this.productArr.filter((val) => {
+                    //     return val.id == product_id;
+                    // })
+                    const foundValue = this.productArr.find(element => element.id === product_id);
 
-                if (this.productArr.hasOwnProperty(product_id)) {
-                    var x = this.productArr[product_id].quantitys;
-
-                    return x;
+                    return  parseInt(foundValue.quantitys);
                 } else {
                     return 0;
                 }
