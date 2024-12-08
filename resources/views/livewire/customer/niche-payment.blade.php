@@ -339,7 +339,7 @@
                     </main>
                 </div>
                 <form class="card bg-white  p-4 h-fit space-y-3">
-                    <h1>Total: <strong>₱<span x-text="parseFloat(productTotal)+@js((float) $niche?->price)"></span></strong></h1>
+                    <h1>Total: <strong>₱<span x-text="parseFloat(productTotal)+parseFloat(service.service_price)+@js((float) $niche?->price)"></span></strong></h1>
                     <a class="btn btn-primary btn-md" type="button"
                         href="{{ route('niches.payment.checkout', ['niche_id' => $niche_id]) }}">Proceed to checkout
                     </a>
@@ -513,6 +513,7 @@
                 schedule_own_priest: date_time,
                 open_services_submit: false,
                 open_services: false,
+                service_price: 0
 
             },
             serviceArr: serviceArr,
@@ -630,6 +631,9 @@
                 return time12Hour;
             },
             async submit() {
+                const price =  await $wire.servicePrice(this.service.service_id);
+                console.log(price)
+                this.service.service_price = price;
                 this.service.open_services_submit = true;
                 if (this.service.own_priest == false) {
                     this.service.service_sched = await $wire.priestSched(this.service.date_id);
@@ -740,6 +744,8 @@
                 this.serviceArr.priest_name = '';
                 this.service.own_priest = false;
                 this.serviceArr.own_priest = false;
+                this.service.service_price = 0;
+                this.serviceArr.service_price = 0;
 
                 this.serviceArr = await this.service;
 

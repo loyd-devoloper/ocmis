@@ -426,9 +426,9 @@
                 service: '',
                 message: 'ss',
                 deceased_name: '',
-                servicePrice:0
+                servicePrice: 0
             },
-            servicePrice:0,
+            servicePrice: 0,
             serviceArr: [],
             productArr: [],
             productTotal: 0,
@@ -562,31 +562,66 @@
 
             },
             changeQuantity(product, type) {
-                if (!!this.productArr[product.id]) {
 
-                    $wire.changeQuantitys(type,product.id);
+                const index = this.productArr.findIndex(oldProduct => oldProduct.id === product.id);
+                this.productTotal = 0;
+                if (index !== -1) {
+                    // if (!!this.productArr[product.id]) {
+
+                    $wire.changeQuantitys(type, product.id);
                     if (type == 'minus') {
-                        var x = this.productArr[product.id];
-                        this.productArr[product.id]['quantitys'] = x.quantitys - 1;
-                        this.productArr[product.id] = x;
+                        // var x = this.productArr[product.id];
+                        // this.productArr[product.id]['quantitys'] = x.quantitys - 1;
+                        // this.productArr[product.id] = x;
+                        var self = this;
+                        var x = this.productArr.map((val) => {
+
+                            if (!!val) {
+
+                                if (val.id == product.id) {
+                                    val.quantitys = val.quantitys - 1;
+                                    self.productTotal += parseInt(val.quantitys) * parseInt(val.price);
+                                } else {
+                                    self.productTotal += parseInt(val.quantitys) * parseInt(val.price);
+                                }
+
+                            }
+
+                            return val;
+                        })
 
                     } else {
-                        var x = this.productArr[product.id];
-                        this.productArr[product.id]['quantitys'] = x.quantitys + 1;
+                        // var x = this.productArr[product.id];
+                        // this.productArr[product.id]['quantitys'] = x.quantitys + 1;
 
-                        this.productArr[product.id] = x;
+                        // this.productArr[product.id] = x;
+                        var self = this;
+                        var x = this.productArr.map((val) => {
+
+                            if (!!val) {
+
+                                if (val.id == product.id) {
+                                    val.quantitys = val.quantitys + 1;
+                                    self.productTotal += parseInt(val.quantitys) * parseInt(val.price);
+                                } else {
+                                    self.productTotal += parseInt(val.quantitys) * parseInt(val.price);
+                                }
+
+                            }
+
+                            return val;
+                        })
                     }
-                    var self = this;
-                    this.productTotal = 0;
-                    this.productArr.filter((val) => {
+                    // var self = this;
+                    // this.productTotal = 0;
+                    // this.productArr.filter((val) => {
 
-                        if (!!val) {
-                            self.productTotal += parseInt(val.quantitys) * parseInt(val.price);
-                        }
-                        return val;
-                    })
+                    //     if (!!val) {
+                    //         self.productTotal += parseInt(val.quantitys) * parseInt(val.price);
+                    //     }
+                    //     return val;
+                    // })
                 }
-                this.alltotal()
             },
             init() {
 

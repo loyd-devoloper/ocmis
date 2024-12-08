@@ -106,6 +106,11 @@ class NichePayment extends Component implements HasForms
         return $first?->name;
 
     }
+    public function servicePrice($service_id)
+    {
+       $price = \App\Models\Category::where('id',$service_id)->first();
+       return $price->price;
+    }
     public function form(Form $form): Form
     {
         return $form
