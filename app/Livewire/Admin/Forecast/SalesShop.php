@@ -28,6 +28,8 @@ class SalesShop extends Component implements HasForms, HasTable
 
     public function table(Table $table): Table
     {
+
+
         return $table
             ->query(OrderItem::query()->where('status', \App\Enums\StatusEnum::Paid->value))
             ->heading('SALES BY SHOP')

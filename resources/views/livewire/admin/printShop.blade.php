@@ -52,7 +52,7 @@
                 <td></td>
                 <td><strong>Total</strong></td>
 
-                <td>{{ session('records')->sum('price') }}</td>
+                <td>{{ session('records')->sum('amount') }}</td>
             </tr>
         </tfoot>
     </table>

@@ -198,11 +198,13 @@ class Niche extends Component implements HasForms, HasTable
                         ->action(function ($record) {
                             if ($record->payment_method == 'Cash' && $record->status == 'Pending' && $record->payment_type == 'Full') {
                                 $record->update(['status' => 'Occupied', 'total_paid' => $record->price_checkout]);
+                                \App\Models\OrderItem::where('order_id',$record->id)->update(['status' => \App\Enums\StatusEnum::Paid->value]);
                                 Mail::to($record->customerInfo?->email)->send(new \App\Mail\SuccessPayment($record->customerInfo?->username, 'Cash', $record->total_paid, $record->id, Carbon::now()));
                             } else {
                                 $paid = (20 / 100) *  (float)$record->price_checkout;
-                                $record->update(['status' => 'Occupied', 'total_paid' => $paid]);
-                                $record->update(['status' => 'Occupied', 'total_paid' => $record->price_checkout]);
+                                // $record->update(['status' => 'Occupied', 'total_paid' => $paid]);
+                                $record->update(['status' => 'Occupied', 'total_paid' => $record->downpayment]);
+                                \App\Models\OrderItem::where('order_id',$record->id)->update(['status' => \App\Enums\StatusEnum::Paid->value]);
                                 Mail::to($record->customerInfo?->email)->send(new \App\Mail\SuccessPayment($record->customerInfo?->username, 'Cash', $record->total_paid, $record->id, Carbon::now()));
                             }
                             Notification::make()

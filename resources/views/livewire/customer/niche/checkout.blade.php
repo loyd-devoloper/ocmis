@@ -67,7 +67,7 @@
                                         <p><span class="font-bold">Message: </span>
                                             <span x-text="serviceArr?.message"></span>
                                         </p>
-                                        <p><span class="font-bold">Own Priest: </span> <span
+                                        <p><span class="font-bold">Non-resident Priest: </span> <span
                                                 x-text="serviceArr?.own_priest ? 'Yes' : 'No'"></span></p>
                                         <p x-show="serviceArr?.own_priest == false"><span class="font-bold">Priest Name:
                                             </span> <span x-text="serviceArr?.priest_name"></span></p>
@@ -309,7 +309,7 @@
                             </label>
 
                             <div class="flex items-center gap-1">
-                                <label for="ownPriest" class="label-text ">Own Priest: </label>
+                                <label for="ownPriest" class="label-text ">Non-resident Priest: </label>
                                 <input type="checkbox" x-model="own_priest" id="ownPriest"
                                     wire:model="own_priest" />
                             </div>

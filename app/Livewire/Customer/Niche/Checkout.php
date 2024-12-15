@@ -117,16 +117,18 @@ class Checkout extends Component
 
         //
 
-       if(count($this->serviceArr))
-       {
-        $this->serviceArr['price'] = (float)$this->service_price;
-       }
+        if (count($this->serviceArr)) {
+            $this->serviceArr['price'] = (float)$this->service_price;
+        }
         $newProduct = [];
+        $totalProduct = 0;
         foreach ($this->productArr as $key => $product) {
             if (!!$product) {
                 $newProduct[$key] = $product;
+                $totalProduct += (int)$product['price'];
             }
         }
+
         $niche = \App\Models\Niche::where('id', $this->niche_id)->update([
             'payment_method' => $this->payment_method,
             'payment_type' => $this->payment_type,
@@ -138,29 +140,52 @@ class Checkout extends Component
             'status' => 'Pending',
             'plan' => $this->payment_type == 'Full' ? '' : $this->plan,
         ]);
-        if($this->payment_type == 'Installment')
-        {
-            \App\Models\NicheInstallment::where('niche_id',$this->niche_id)->delete();
+
+        if (!!$newProduct) {
+
+            // $orders = \App\Models\ShopOrder::create([
+            //     'user_id' => Auth::id(),
+            //     'status' => \App\Enums\StatusEnum::NotPaid->value,
+            //     'payment_method' => $this->payment_method,
+            //     'items' => json_encode($newProduct),
+            //     'total' => $totalProduct
+            // ]);
+            $x = [];
+            foreach ($newProduct as $product) {
+
+                $x['name'] = $product['product_name'];
+                $x['product_id'] = $product['category_id'];
+                $x['price'] = $product['price'];
+                $x['quantity'] = $product['quantitys'];
+                $x['status'] = \App\Enums\StatusEnum::NotPaid->value;
+                $x['amount'] = (int)$product['price'] * (int)$product['quantitys'];
+                $x['user_id'] = Auth::id();
+                $x['order_id'] = $this->niche_id;
+                \App\Models\OrderItem::create($x);
+            }
+        }
+        if ($this->payment_type == 'Installment') {
+            \App\Models\NicheInstallment::where('niche_id', $this->niche_id)->delete();
             $x = 0;
-            for($i = (int)$this->plan;$i>0;$i--)
-            {
+            for ($i = (int)$this->plan; $i > 0; $i--) {
                 $x++;
                 $currentDate = Carbon::now();
 
                 \App\Models\NicheInstallment::create([
-                    'niche_id'=>$this->niche_id,
+                    'niche_id' => $this->niche_id,
                     'customer_id' => Auth::id(),
-                    'price'=>$this->perMonth,
-                    'status'=>\App\Enums\StatusEnum::NotPaid->value,
-                    'date'=>$currentDate->addMonths($x)->format('Y-m-d'),
+                    'price' => $this->perMonth,
+                    'status' => \App\Enums\StatusEnum::NotPaid->value,
+                    'date' => $currentDate->addMonths($x)->format('Y-m-d'),
                 ]);
-
             }
             $inv = 'INV-' . date('Y') . '-' . str_pad($this->niche_id, 5, '0', STR_PAD_LEFT);
             \App\Models\Niche::where('id', $this->niche_id)->update([
-                'ref_number' => $inv ,
+                'ref_number' => $inv,
                 'downpayment' => $this->downpayment
             ]);
+
+
         }
 
 
@@ -176,7 +201,7 @@ class Checkout extends Component
                 ],
                 'description' => "Invoice No.:  $inv",
                 'line_items' => [
-                    ['amount' => $this->payment_type == 'Full' ? $this->subtotal * 100 : (float)$this->downpayment * 100,'currency' => 'PHP','name' => "Niche $level - $niche_number", 'quantity' => 1]
+                    ['amount' => $this->payment_type == 'Full' ? $this->subtotal * 100 : (float)$this->downpayment * 100, 'currency' => 'PHP', 'name' => "Niche $level - $niche_number", 'quantity' => 1]
                 ],
                 'payment_method_types' => [
                     'gcash'
@@ -195,29 +220,28 @@ class Checkout extends Component
             ]);
 
             return $this->redirect($checkout->getData()['checkout_url']);
-        }else{
+        } else {
             Notification::make()
-            ->title('Submitted successfully')
-            ->success()
-            ->send();
+                ->title('Submitted successfully')
+                ->success()
+                ->send();
             return $this->redirect(route('my_niche'));
         }
     }
-    public function changeQuantitys($type,$ShopProduct)
+    public function changeQuantitys($type, $ShopProduct)
     {
-        $x = \App\Models\ShopProduct::where('id',$ShopProduct)->first();
+        $x = \App\Models\ShopProduct::where('id', $ShopProduct)->first();
 
 
-         $x->update([
-             'quantity'=> $type == 'plus' ? (int)$x?->quantity - 1 : (int)$x?->quantity + 1
-          ]);
-          return redirect()->route('niches.payment.checkout', ['niche_id' => $this->niche_id]);
-
+        $x->update([
+            'quantity' => $type == 'plus' ? (int)$x?->quantity - 1 : (int)$x?->quantity + 1
+        ]);
+        return redirect()->route('niches.payment.checkout', ['niche_id' => $this->niche_id]);
     }
     public function servicePrice($service_id)
     {
-       $price = \App\Models\Category::where('id',$service_id)->first();
-       return $price->price;
+        $price = \App\Models\Category::where('id', $service_id)->first();
+        return $price->price;
     }
     public function render()
     {

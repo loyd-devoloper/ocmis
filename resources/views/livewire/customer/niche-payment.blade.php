@@ -221,7 +221,7 @@
                                 </label>
 
                                 <div class="flex items-center gap-1">
-                                    <label for="ownPriest" class="label-text ">Non-resident: </label>
+                                    <label for="ownPriest" class="label-text ">non-resident priest: </label>
                                     <input type="checkbox" x-model="service.own_priest" id="ownPriest" />
                                 </div>
                                 <div x-show="service.own_priest" class="mb-3">
