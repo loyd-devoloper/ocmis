@@ -190,6 +190,7 @@ class Checkout extends Component
 
 
         if ($this->payment_method == 'Gcash') {
+            $inv = 'INV-' . date('Y') . '-' . str_pad($this->niche_id, 5, '0', STR_PAD_LEFT);
             $level = $this->niche?->level;
             $niche_number = $this->niche?->niche_number;
             $checkout = Paymongo::checkout()->create([
