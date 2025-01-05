@@ -32,11 +32,11 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         script: |
           cd domains/ocmis.online/public_html/
-          cp .env.example .env
+#          cp .env.example .env
           # composer2 update
           # php artisan storage:link
           # php artisan key:generate
           # php artisan migrate:reset --path=database\migrations\2024_10_24_164905_create_niche_installments_table.php
-          php artisan migrate:fresh --seed
+#          php artisan migrate:fresh --seed
           php artisan optimize
           php artisan config:clear
