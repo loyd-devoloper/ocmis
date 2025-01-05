@@ -9,10 +9,33 @@ use Filament\Widgets\ChartWidget;
 class NicheSales extends ChartWidget
 {
     protected static ?string $heading = 'Daily Sales';
+    protected static ?string $pollingInterval = null;
+
 
     protected static ?string $maxHeight = '70svh';
     public ?string $filter = 'daily';
-
+    private array $colors = [
+        'rgba(255, 99, 132, 0.2)',
+        'rgba(54, 162, 235, 0.2)',
+        'rgba(255, 206, 86, 0.2)',
+        'rgba(75, 192, 192, 0.2)',
+        'rgba(153, 102, 255, 0.2)',
+        'rgba(255, 159, 64, 0.2)',
+        'rgba(255, 99, 132, 0.5)',
+        'rgba(54, 162, 235, 0.5)',
+        'rgba(255, 206, 86, 0.5)',
+        'rgba(75, 192, 192, 0.5)',
+        'rgba(153, 102, 255, 0.5)',
+        'rgba(255, 159, 64, 0.5)',
+        'rgba(255, 99, 132, 0.8)',
+        'rgba(54, 162, 235, 0.8)',
+        'rgba(255, 206, 86, 0.8)',
+        'rgba(75, 192, 192, 0.8)',
+        'rgba(153, 102, 255, 0.8)',
+        'rgba(255, 159, 64, 0.8)',
+        'rgba(255, 99, 132, 1)',
+        'rgba(54, 162, 235, 1)',
+    ];
 
     protected function getData(): array
     {
@@ -20,7 +43,8 @@ class NicheSales extends ChartWidget
         $filter = $this->filter;
 
         $startDate = Carbon::parse('01-01-2024');
-        $endDate = Carbon::now();
+        $endDate = Carbon::parse('03-12-2025');
+//        $endDate = Carbon::now();
 
         switch ($filter) {
             case 'weekly':
@@ -62,93 +86,59 @@ class NicheSales extends ChartWidget
                         return Carbon::parse($item->updated_at)->format('M Y'); // Group by month
                     case 'yearly':
                         return Carbon::parse($item->updated_at)->format('Y'); // Group by year
-                        case 'annually':
-                            return Carbon::parse($item->updated_at)->format('Y'); // Group by year (same as yearly)
+                    case 'annually':
+                        return Carbon::parse($item->updated_at)->format('Y'); // Group by year (same as yearly)
                     case 'daily':
                     default:
                         return Carbon::parse($item->updated_at)->format('M d, Y'); // Group by date
                 }
             });
 
-        $labels = [];
-        $values = [];
+        $datasets = [];
+        $labels = array_keys($top->toArray());
+        $colorCount = count($this->colors);
+        foreach ($top as $date => $niches) {
+            foreach ($niches as $niche) {
+                $buildingId = $niche->building_id;
+                $totalPaid = $niche->total_paid; // Get the total_paid for the niche
 
-        foreach ($top as $key => $v) {
-            // Add the key to the label array
-            $labels[] = $key;
-            $values[] = $v->sum('total_paid'); // Assuming 'total_paid' is the field you want to sum
+                // Initialize dataset for building_id if not exists
+                if (!isset($datasets[$buildingId])) {
+                    $datasets[$buildingId] = [
+                        'label' => 'Building ' . $buildingId,
+                        'data' => array_fill(0, count($labels), 0), // Initialize data array
+                        'backgroundColor' => $this->colors[count($datasets) % $colorCount],
+                            'borderColor' => 'rgba(0, 0, 0, 1)',
+                        'borderWidth' => 1,
+                    ];
+                }
+
+                // Increment the total_paid for the specific date
+                $dateIndex = array_search($date, $labels);
+                if ($dateIndex !== false) {
+                    $datasets[$buildingId]['data'][$dateIndex] += $totalPaid; // Sum the total_paid
+                }
+            }
         }
 
+        // Convert datasets to array
+        $datasets = array_values($datasets);
+
         return [
-            'datasets' => [
-                [
-                    'label' => ucfirst($filter) . ' Sales',
-                    'data' => $values,
-                    'backgroundColor' => 'rgba(255, 99, 132, 0.2)',
-                    'borderColor' => 'rgba(255, 99, 132, 1)',
-                    'borderWidth' => 1,
-                ],
-            ],
+            'datasets' => $datasets,
             'labels' => $labels,
         ];
     }
 
-    // protected function getData(): array
-    // {
-    //     //
-    //     $top = \App\Models\Niche::where('status','Occupied')->get()->groupBy(function ($item) {
-    //         return Carbon::parse($item->created_at)->format('M d, Y'); // Format to 'Y-m-d' to group by date only
-    //     });
 
-
-    //     $label = [];
-    //     $data = [];
-    //     foreach ($top as $key => $v) {
-
-    //         // Add the key to the label array
-    //         $label[] = $key;
-
-    //        $data[] = $v->sum('total_paid');
-    //     }
-
-    //     // Define the date range (e.g., last 30 days)
-    //     $startDate = Carbon::parse('01-10-2024');
-    //     $endDate = Carbon::now();
-
-
-    //     $dateRange = [];
-    //     $currentDate = $startDate->copy();
-
-    //     while ($currentDate->lte($endDate)) {
-    //         $dateRange[$currentDate->format('M d, Y')] = 0; // Initialize with 0
-    //         $currentDate->addDay();
-    //     }
-
-    //     // Merge fetched sales data into the date range array
-    //     foreach ($top as $date => $totalSales) {
-    //         $dateRange[$date] = $totalSales->sum('price'); // Replace 0 with actual sales count
-    //     }
-
-    //     // Prepare data for the chart
-    //     $labels = array_keys($dateRange);
-    //     $values = array_values($dateRange);
-
-    //     return [
-    //         'datasets' => [
-    //             [
-    //                 'label' =>'Daily Sales',
-    //                 'data' => $values,
-    //                 'backgroundColor' => [
-    //                     'rgb(255, 99, 132)',
-    //                     'rgb(54, 162, 235)',
-    //                     'rgb(255, 205, 86)'
-    //                 ],
-    //             ],
-    //         ],
-    //         'labels' => $labels,
-
-    //     ];
-    // }
+    private function randomColor(): string
+    {
+        $r = rand(0, 255);
+        $g = rand(0, 255);
+        $b = rand(0, 255);
+        $a = 0.2; // Set alpha for transparency
+        return "rgba($r, $g, $b, $a)";
+    }
     protected function getFilters(): ?array
     {
         return [
